@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>欢迎 - 会意</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "xuan-paper": "#F9F5F0",
+                        "ink-dark": "#2C2C2C",
+                        "ink-soft": "#5A5A5A",
+                        "warm-red": "#A64D4D",
+                    },
+                    fontFamily: {
+                        "serif": ["Noto Serif SC", "serif"],
+                        "sans": ["system-ui", "-apple-system", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            background-color: theme("colors.xuan-paper");
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+            color: theme("colors.ink-dark")
+        }
+        .serif-font {
+            font-family: "Noto Serif SC", serif
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 48
+        }
+        .logo-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center
+        }
+        .heart-overlay {
+            position: absolute;
+            font-variation-settings: "FILL" 1, "wght" 400;
+            opacity: 0.8;
+            color: theme("colors.warm-red");
+            font-size: 1.5rem;
+            bottom: 2px;
+            right: -4px
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col items-center justify-between px-8 py-16 overflow-hidden">
+<div class="h-10"></div>
+<div class="flex flex-col items-center text-center space-y-8">
+<div class="logo-container mb-4">
+<span class="material-symbols-outlined text-[80px] text-ink-dark opacity-90">
+                auto_stories
+            </span>
+<span class="material-symbols-outlined heart-overlay">
+                favorite
+            </span>
+</div>
+<div class="space-y-4">
+<h1 class="serif-font text-5xl font-bold tracking-widest text-ink-dark">会意</h1>
+<p class="serif-font text-lg tracking-[0.3em] text-ink-soft opacity-80 mt-2">懂书也懂你</p>
+</div>
+</div>
+<div class="w-full max-w-xs flex flex-col items-center space-y-6">
+<button class="w-full py-4 px-8 rounded-full border border-ink-dark/10 bg-white/50 backdrop-blur-sm shadow-sm active:scale-95 transition-all duration-200">
+<span class="serif-font text-lg font-medium tracking-widest text-ink-dark">开始阅读</span>
+</button>
+<button class="px-4 py-2 text-ink-soft/60 active:opacity-60 transition-opacity">
+<span class="serif-font text-sm tracking-widest">已有账号？登录</span>
+</button>
+<div class="h-2"></div>
+</div>
+
+</body></html>

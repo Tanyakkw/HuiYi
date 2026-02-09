@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+  <!-- Preconnect for faster font loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+  <script src="/static/tailwind.js"></script>
+  <link
+    href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link
+      href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap"
+      rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet" />
+  </noscript>
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "xuan-paper": "#F9F5F0",
+            "ink-dark": "#2C2C2C",
+            "ink-soft": "#5A5A5A",
+            "warm-red": "#A64D4D",
+            "earth-brown": "#5d544b",
+            "warm-gray": "#9e9a91",
+            "xuan-border": "#e8e0d5",
+          },
+          fontFamily: {
+            "serif": ["Noto Serif SC", "serif"],
+            "sans": ["Noto Sans SC", "system-ui", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <title>会意 - 个人中心</title>
+  <style type="text/tailwindcss">
+    body {
+      background-color: theme("colors.xuan-paper");
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+      color: theme("colors.ink-dark");
+    }
+    .serif-font {
+      font-family: "Noto Serif SC", serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+
+    /* 移动端性能优化 */
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll !important;
+      }
+
+      * {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+      }
+
+      .backdrop-blur-md,
+      .backdrop-blur-sm,
+      .backdrop-blur-xl {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+      }
+
+      /* 底部导航栏特殊处理 */
+      nav.backdrop-blur-xl {
+        background-color: #F9F5F0 !important;
+        border-top: 1px solid rgba(93, 84, 75, 0.1) !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-xuan-paper font-sans text-ink-dark">
+  <div
+    class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden max-w-[480px] mx-auto">
+    <!-- TopAppBar -->
+    <div
+      class="flex items-center bg-xuan-paper/90 backdrop-blur-md p-4 pb-2 justify-between sticky top-0 z-10 border-b border-earth-brown/5">
+      <div class="flex w-12 items-center">
+        <a href="/bookshelf"
+          class="flex items-center justify-center h-10 w-10 text-earth-brown active:scale-95 transition-transform">
+          <span class="material-symbols-outlined">arrow_back_ios</span>
+        </a>
+      </div>
+      <div class="flex flex-col items-center">
+        <h2 class="serif-font text-ink-dark text-lg font-bold leading-tight tracking-widest">个人中心</h2>
+        <p class="text-[10px] tracking-[0.2em] text-warm-gray uppercase mt-0.5">懂书也懂你</p>
+      </div>
+      <div class="flex w-12 items-center justify-end">
+        <button onclick="alert('设置功能开发中')"
+          class="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 w-10 bg-transparent text-earth-brown hover:bg-black/5 active:scale-95 transition-all">
+          <span class="material-symbols-outlined text-[24px]">settings</span>
+        </button>
+      </div>
+    </div>
+    <!-- ProfileHeader -->
+    <div class="flex p-6 @container">
+      <div class="flex w-full flex-col gap-4">
+        <div class="flex items-center gap-6">
+          <div id="profile-avatar"
+            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24 border-2 border-white shadow-sm"
+            data-alt="User profile picture showing a calm landscape"
+            style='background-image: url("/static/avatars/default_avatar_1.svg");'>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="serif-font text-ink-dark text-[24px] font-bold leading-tight tracking-wide" id="profile-username">
+              加载中...</p>
+            <p class="text-warm-red font-medium text-sm mt-1 italic serif-font" id="profile-signature">懂书也懂你</p>
+            <div class="flex gap-4 mt-3">
+              <button onclick="openFollowingModal()" class="text-center">
+                <p class="text-ink-dark text-lg font-bold" id="following-count">12</p>
+                <p class="text-warm-gray text-[10px]">关注</p>
+              </button>
+              <div class="w-px h-8 bg-gray-200"></div>
+              <button onclick="openFollowersModal()" class="text-center">
+                <p class="text-ink-dark text-lg font-bold" id="followers-count">28</p>
+                <p class="text-warm-gray text-[10px]">粉丝</p>
+              </button>
+              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="text-center">
+                <p class="text-ink-dark text-lg font-bold">142</p>
+                <p class="text-warm-gray text-[10px]">已读</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SectionHeader: Homepage Display Books -->
+    <div class="flex items-center justify-between px-4 mt-2">
+      <h3 class="serif-font text-ink-dark text-lg font-bold leading-tight tracking-wide">主页展示书籍</h3>
+      <button onclick="openBookSelector()"
+        class="text-warm-red text-xs px-3 py-1 border border-warm-red/30 rounded-full hover:bg-warm-red/10 transition-colors">
+        编辑
+      </button>
+    </div>
+    <p class="text-warm-gray text-xs px-4 mt-1">选择展示在个人主页的书籍，吸引志同道合的书友</p>
+    <!-- ImageGrid: Display Books (Dynamic) -->
+    <div id="display-books-grid" class="grid grid-cols-3 gap-3 p-4">
+      <div class="text-center py-8 col-span-3 text-warm-gray text-xs">加载中...</div>
+    </div>
+    <!-- SingleButton: Find Soulmates -->
+    <div class="flex px-4 py-2">
+      <button onclick="openBookFriends()"
+        class="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-4 border border-ink-dark/10 bg-white/50 backdrop-blur-sm shadow-sm active:scale-95 transition-all gap-2 hover:bg-white/80">
+        <span class="material-symbols-outlined text-earth-brown">diversity_3</span>
+        <span class="truncate font-medium text-sm tracking-widest serif-font text-ink-dark">寻找书友</span>
+      </button>
+    </div>
+
+    <!-- Book Selector Modal -->
+    <div id="book-selector-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end justify-center">
+      <div class="bg-white rounded-t-2xl w-full max-w-lg max-h-[70vh] overflow-y-auto">
+        <div class="sticky top-0 bg-white p-4 border-b border-black/5 flex justify-between items-center">
+          <h3 class="font-bold text-ink-dark">选择展示书籍</h3>
+          <button onclick="closeBookSelector()" class="text-warm-gray">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div id="book-selector-list" class="p-4 grid grid-cols-3 gap-3">
+          <p class="col-span-3 text-center text-warm-gray text-sm py-4">加载中...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Friends Modal -->
+    <div id="book-friends-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
+        <div class="bg-gradient-to-r from-warm-red/10 to-earth-brown/10 p-6 text-center">
+          <span class="material-symbols-outlined text-4xl text-warm-red">diversity_3</span>
+          <h3 class="font-bold text-xl text-ink-dark mt-3 serif-font">发现书友</h3>
+          <p class="text-warm-gray text-sm mt-1">根据您的阅读品味匹配志同道合的书友</p>
+        </div>
+        <div id="book-friends-list" class="p-4 space-y-3 max-h-[40vh] overflow-y-auto">
+          <p class="text-center text-warm-gray text-sm py-4">正在匹配中...</p>
+        </div>
+        <div class="p-4 border-t border-black/5">
+          <button onclick="closeBookFriends()" class="w-full py-3 bg-ink-dark text-white rounded-full font-medium">
+            关闭
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Divider -->
+    <div class="px-4 py-6">
+      <div class="h-[1px] bg-earth-brown/10"></div>
+    </div>
+    <!-- Menu List -->
+    <div class="flex flex-col px-4 gap-2">
+      <!-- Personal Information -->
+      <button onclick="alert('个人信息编辑功能开发中')"
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors active:scale-95">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">badge</span>
+          <span class="text-ink-dark font-medium serif-font">个人信息</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+      <!-- Reading Statistics -->
+      <button onclick="alert('您的阅读报告生成中...')"
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors active:scale-95">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">monitoring</span>
+          <span class="text-ink-dark font-medium serif-font">阅读统计</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+      <!-- My Community -->
+      <button onclick="openCommunityModal()"
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors active:scale-95">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">forum</span>
+          <span class="text-ink-dark font-medium serif-font">我的社群</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+      <!-- Settings -->
+      <button onclick="alert('系统设置')"
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors active:scale-95">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">tune</span>
+          <span class="text-ink-dark font-medium serif-font">偏好设置</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+      <!-- Feedback -->
+      <button onclick="openFeedbackModal()"
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors active:scale-95">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">feedback</span>
+          <span class="text-ink-dark font-medium serif-font">意见反馈</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+    </div>
+
+    <!-- Community Modal -->
+    <div id="community-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
+        <div class="bg-gradient-to-r from-earth-brown/10 to-warm-red/10 p-5 flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-xl text-ink-dark serif-font">书友社群</h3>
+            <p class="text-warm-gray text-xs mt-1">加入讨论，分享阅读心得</p>
+          </div>
+          <button onclick="closeCommunityModal()" class="text-warm-gray">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="p-4 space-y-3 max-h-[50vh] overflow-y-auto">
+          <!-- Virtual Groups -->
+          <div class="flex items-center gap-3 p-3 bg-red-50 rounded-xl border border-red-100">
+            <div
+              class="w-12 h-12 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-bold">
+              红</div>
+            <div class="flex-1">
+              <p class="font-bold text-ink-dark">红楼梦讨论群</p>
+              <p class="text-xs text-warm-gray">328 位书友 · 今日 42 条新消息</p>
+            </div>
+            <button onclick="joinGroup(this, '红楼梦')"
+              class="px-3 py-1 bg-red-500 text-white text-xs rounded-full font-medium hover:bg-red-600 transition-colors">加入</button>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
+            <div
+              class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+              西</div>
+            <div class="flex-1">
+              <p class="font-bold text-ink-dark">西游记研读会</p>
+              <p class="text-xs text-warm-gray">156 位书友 · 今日 18 条新消息</p>
+            </div>
+            <button onclick="joinGroup(this, '西游记')"
+              class="px-3 py-1 bg-blue-500 text-white text-xs rounded-full font-medium hover:bg-blue-600 transition-colors">加入</button>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
+            <div
+              class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold">
+              三</div>
+            <div class="flex-1">
+              <p class="font-bold text-ink-dark">三国演义爱好者</p>
+              <p class="text-xs text-warm-gray">243 位书友 · 今日 31 条新消息</p>
+            </div>
+            <button onclick="joinGroup(this, '三国演义')"
+              class="px-3 py-1 bg-green-500 text-white text-xs rounded-full font-medium hover:bg-green-600 transition-colors">加入</button>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-100">
+            <div
+              class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold">
+              水</div>
+            <div class="flex-1">
+              <p class="font-bold text-ink-dark">水浒传书友圈</p>
+              <p class="text-xs text-warm-gray">189 位书友 · 今日 15 条新消息</p>
+            </div>
+            <button onclick="joinGroup(this, '水浒传')"
+              class="px-3 py-1 bg-purple-500 text-white text-xs rounded-full font-medium hover:bg-purple-600 transition-colors">加入</button>
+          </div>
+          <div class="flex items-center gap-3 p-3 bg-amber-50 rounded-xl border border-amber-100">
+            <div
+              class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-bold">
+              诗</div>
+            <div class="flex-1">
+              <p class="font-bold text-ink-dark">唐诗宋词品读</p>
+              <p class="text-xs text-warm-gray">412 位书友 · 今日 67 条新消息</p>
+            </div>
+            <button onclick="joinGroup(this, '唐诗宋词')"
+              class="px-3 py-1 bg-amber-500 text-white text-xs rounded-full font-medium hover:bg-amber-600 transition-colors">加入</button>
+          </div>
+        </div>
+        <div class="p-4 border-t border-black/5 text-center text-xs text-warm-gray">
+          更多社群开放中，敬请期待
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
+        <div class="p-5 border-b border-black/5 flex items-center justify-between">
+          <h3 class="font-bold text-lg text-ink-dark serif-font">意见反馈</h3>
+          <button onclick="closeFeedbackModal()" class="text-warm-gray">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="p-4">
+          <p class="text-xs text-warm-gray mb-3">您的反馈对我们非常重要，请描述您遇到的问题或建议：</p>
+          <textarea id="feedback-input" rows="4" placeholder="请输入您的反馈内容..."
+            class="w-full border border-gray-200 rounded-lg p-3 text-sm resize-none focus:outline-none focus:border-warm-red"></textarea>
+          <div class="flex gap-2 mt-3">
+            <span class="px-2 py-1 bg-gray-100 text-xs rounded-full cursor-pointer hover:bg-gray-200"
+              onclick="document.getElementById('feedback-input').value += ' #功能建议'">功能建议</span>
+            <span class="px-2 py-1 bg-gray-100 text-xs rounded-full cursor-pointer hover:bg-gray-200"
+              onclick="document.getElementById('feedback-input').value += ' #Bug报告'">Bug报告</span>
+            <span class="px-2 py-1 bg-gray-100 text-xs rounded-full cursor-pointer hover:bg-gray-200"
+              onclick="document.getElementById('feedback-input').value += ' #体验优化'">体验优化</span>
+          </div>
+        </div>
+        <div class="p-4 pt-0 flex gap-2">
+          <button onclick="closeFeedbackModal()"
+            class="flex-1 py-2 border border-gray-200 rounded-full text-sm">取消</button>
+          <button onclick="submitFeedback()" class="flex-1 py-2 bg-ink-dark text-white rounded-full text-sm">提交</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Followers Modal -->
+    <div id="followers-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
+        <div class="p-5 border-b border-black/5 flex items-center justify-between">
+          <h3 class="font-bold text-lg text-ink-dark serif-font">我的粉丝</h3>
+          <button onclick="closeFollowersModal()" class="text-warm-gray">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div id="followers-list" class="p-4 space-y-3 max-h-[50vh] overflow-y-auto">
+          <p class="text-center text-warm-gray text-sm py-4">加载中...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Following Modal -->
+    <div id="following-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
+        <div class="p-5 border-b border-black/5 flex items-center justify-between">
+          <h3 class="font-bold text-lg text-ink-dark serif-font">我的关注</h3>
+          <button onclick="closeFollowingModal()" class="text-warm-gray">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div id="following-list" class="p-4 space-y-3 max-h-[50vh] overflow-y-auto">
+          <p class="text-center text-warm-gray text-sm py-4">加载中...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Padding -->
+    <div class="h-28 bg-transparent"></div>
+    <!-- Bottom Navigation - Matching 书架首页_1 style -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-xuan-paper/95 backdrop-blur-xl border-t border-earth-brown/5 pb-8 pt-3 z-50">
+      <div class="flex justify-around px-8 max-w-[480px] mx-auto">
+        <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors"
+          href="/bookshelf">
+          <span class="material-symbols-outlined text-2xl">auto_stories</span>
+          <p class="text-[10px] font-medium tracking-widest serif-font">书架</p>
+        </a>
+        <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors"
+          href="/chat">
+          <span class="material-symbols-outlined text-2xl">chat_bubble_outline</span>
+          <p class="text-[10px] font-medium tracking-widest serif-font">对话</p>
+        </a>
+        <a class="flex flex-col items-center gap-1.5 text-ink-dark" href="/profile">
+          <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">face_6</span>
+          <p class="text-[10px] font-medium tracking-widest serif-font">我的</p>
+        </a>
+      </div>
+    </nav>
+  </div>
+  <script>
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      window.location.href = '/login';
+    }
+
+    // Gradient presets for covers (same as bookshelf)
+    const COVER_GRADIENTS = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+    ];
+
+    function hashTitle(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
+
+    let userBooks = [];
+
+    // Load user profile from API
+    async function loadProfile() {
+      try {
+        const res = await fetch(`/api/user_profile?user_id=${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('profile-username').innerText = data.username;
+          document.getElementById('profile-signature').innerText = data.signature;
+          document.getElementById('profile-avatar').style.backgroundImage = `url('/static/avatars/${data.avatar}')`;
+        }
+      } catch (e) {
+        console.error('Failed to load profile', e);
+      }
+    }
+
+    // Load user's books for display
+    async function loadBooks() {
+      try {
+        const res = await fetch(`/api/books?user_id=${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          userBooks = data.books || [];
+          renderDisplayBooks(userBooks.slice(0, 3)); // Show first 3
+        }
+      } catch (e) {
+        console.error('Failed to load books', e);
+      }
+    }
+
+    function renderDisplayBooks(books) {
+      const grid = document.getElementById('display-books-grid');
+      if (books.length === 0) {
+        grid.innerHTML = '<div class="col-span-3 text-center py-8 text-warm-gray text-xs">暂无展示书籍，点击编辑添加</div>';
+        return;
+      }
+
+      grid.innerHTML = books.map(book => {
+        const coverIdx = hashTitle(book.title) % COVER_GRADIENTS.length;
+        return `
+          <div class="flex flex-col gap-3 rounded-sm justify-end p-2 aspect-[3/4.5] shadow-[5px_5px_15px_rgba(0,0,0,0.08)] border border-xuan-border"
+               style="background: ${COVER_GRADIENTS[coverIdx]}">
+            <p class="text-white text-[10px] font-bold leading-tight line-clamp-2 serif-font mt-auto">《${book.title}》</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Book Selector Modal
+    function openBookSelector() {
+      document.getElementById('book-selector-modal').classList.remove('hidden');
+      renderBookSelectorList();
+    }
+
+    function closeBookSelector() {
+      document.getElementById('book-selector-modal').classList.add('hidden');
+    }
+
+    function renderBookSelectorList() {
+      const list = document.getElementById('book-selector-list');
+      if (userBooks.length === 0) {
+        list.innerHTML = '<p class="col-span-3 text-center text-warm-gray text-sm py-4">书架空空，快去添加书籍吧</p>';
+        return;
+      }
+
+      list.innerHTML = userBooks.map(book => {
+        const coverIdx = hashTitle(book.title) % COVER_GRADIENTS.length;
+        return `
+          <div class="cursor-pointer active:scale-95 transition-transform" onclick="selectBook('${book.id}')">
+            <div class="flex flex-col gap-2 rounded-sm justify-end p-2 aspect-[3/4.5] shadow border"
+                 style="background: ${COVER_GRADIENTS[coverIdx]}">
+              <p class="text-white text-[9px] font-bold line-clamp-2 serif-font mt-auto">《${book.title}》</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectBook(bookId) {
+      // Move selected book to front for display
+      const book = userBooks.find(b => b.id === bookId);
+      if (book) {
+        userBooks = [book, ...userBooks.filter(b => b.id !== bookId)];
+        renderDisplayBooks(userBooks.slice(0, 3));
+        closeBookSelector();
+      }
+    }
+
+    // Book Friends Modal
+    function openBookFriends() {
+      document.getElementById('book-friends-modal').classList.remove('hidden');
+      loadBookFriends();
+    }
+
+    function closeBookFriends() {
+      document.getElementById('book-friends-modal').classList.add('hidden');
+    }
+
+    async function loadBookFriends() {
+      const list = document.getElementById('book-friends-list');
+      list.innerHTML = '<p class="text-center text-warm-gray text-sm py-4">正在匹配中...</p>';
+
+      // Simulate matching with mock data (in real app, would call backend)
+      await new Promise(r => setTimeout(r, 1000));
+
+      const friends = [
+        { name: '书海拾贝', sig: '书中自有黄金屋', avatar: 'default_avatar_2.svg' },
+        { name: '静读时光', sig: '一杯清茶，一本好书', avatar: 'default_avatar_3.svg' },
+        { name: '墨香书童', sig: '阅读使人充实', avatar: 'default_avatar_1.svg' },
+      ];
+
+      list.innerHTML = friends.map(f => `
+        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+          <div class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-white shadow-sm"
+               style="background-image: url('/static/avatars/${f.avatar}')"></div>
+          <div class="flex-1">
+            <p class="font-bold text-ink-dark">${f.name}</p>
+            <p class="text-xs text-warm-gray">${f.sig}</p>
+          </div>
+          <button class="px-3 py-1 bg-warm-red/10 text-warm-red text-xs rounded-full font-medium">
+            关注
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Community Modal
+    function openCommunityModal() {
+      document.getElementById('community-modal').classList.remove('hidden');
+    }
+    function closeCommunityModal() {
+      document.getElementById('community-modal').classList.add('hidden');
+    }
+
+    // Feedback Modal
+    function openFeedbackModal() {
+      document.getElementById('feedback-modal').classList.remove('hidden');
+    }
+    function closeFeedbackModal() {
+      document.getElementById('feedback-modal').classList.add('hidden');
+      document.getElementById('feedback-input').value = '';
+    }
+    function submitFeedback() {
+      const feedback = document.getElementById('feedback-input').value.trim();
+      if (!feedback) {
+        alert('请输入反馈内容');
+        return;
+      }
+      // In real app, would send to backend
+      console.log('Feedback submitted:', feedback);
+      alert('感谢您的反馈！我们会认真考虑您的建议。');
+      closeFeedbackModal();
+    }
+
+    // Join Group
+    function joinGroup(btn, groupName) {
+      btn.innerText = '已加入';
+      btn.disabled = true;
+      btn.classList.remove('hover:bg-red-600', 'hover:bg-blue-600', 'hover:bg-green-600', 'hover:bg-purple-600', 'hover:bg-amber-600');
+      btn.classList.add('bg-gray-300', 'cursor-not-allowed');
+      btn.classList.remove('bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-amber-500');
+      alert(`已成功加入「${groupName}」讨论群！`);
+    }
+
+    // Followers Modal
+    function openFollowersModal() {
+      document.getElementById('followers-modal').classList.remove('hidden');
+      loadFollowers();
+    }
+    function closeFollowersModal() {
+      document.getElementById('followers-modal').classList.add('hidden');
+    }
+
+    async function loadFollowers() {
+      const list = document.getElementById('followers-list');
+      list.innerHTML = '<p class="text-center text-warm-gray text-sm py-4">加载中...</p>';
+
+      await new Promise(r => setTimeout(r, 500));
+
+      const followers = [
+        { name: '书海拾贝', sig: '书中自有黄金屋', avatar: 'default_avatar_2.svg' },
+        { name: '静读时光', sig: '一杯清茶，一本好书', avatar: 'default_avatar_3.svg' },
+        { name: '墨香书童', sig: '阅读使人充实', avatar: 'default_avatar_1.svg' },
+        { name: '诗意生活', sig: '以书会友', avatar: 'default_avatar_4.svg' },
+        { name: '云中书简', sig: '读万卷书，行万里路', avatar: 'default_avatar_5.svg' },
+      ];
+
+      list.innerHTML = followers.map(f => `
+        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+          <div class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-white shadow-sm"
+            style="background-image: url('/static/avatars/${f.avatar}')"></div>
+          <div class="flex-1">
+            <p class="font-bold text-ink-dark text-sm">${f.name}</p>
+            <p class="text-xs text-warm-gray">${f.sig}</p>
+          </div>
+          <button class="px-3 py-1 bg-warm-red/10 text-warm-red text-xs rounded-full font-medium">回关</button>
+        </div>
+      `).join('');
+    }
+
+    // Following Modal
+    function openFollowingModal() {
+      document.getElementById('following-modal').classList.remove('hidden');
+      loadFollowing();
+    }
+    function closeFollowingModal() {
+      document.getElementById('following-modal').classList.add('hidden');
+    }
+
+    async function loadFollowing() {
+      const list = document.getElementById('following-list');
+      list.innerHTML = '<p class="text-center text-warm-gray text-sm py-4">加载中...</p>';
+
+      await new Promise(r => setTimeout(r, 500));
+
+      const following = [
+        { name: '古典文学社', sig: '传承经典，润泽心灵', avatar: 'default_avatar_3.svg' },
+        { name: '现代诗歌圈', sig: '诗意栖居', avatar: 'default_avatar_5.svg' },
+        { name: '历史爱好者', sig: '以史为鉴', avatar: 'default_avatar_1.svg' },
+      ];
+
+      list.innerHTML = following.map(f => `
+        <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+          <div class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-white shadow-sm"
+            style="background-image: url('/static/avatars/${f.avatar}')"></div>
+          <div class="flex-1">
+            <p class="font-bold text-ink-dark text-sm">${f.name}</p>
+            <p class="text-xs text-warm-gray">${f.sig}</p>
+          </div>
+          <button class="px-3 py-1 border border-gray-300 text-gray-500 text-xs rounded-full font-medium">已关注</button>
+        </div>
+      `).join('');
+    }
+
+    // Initialize
+    loadProfile();
+    loadBooks();
+  </script>
+</body>
+
+</html>

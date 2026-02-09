@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>我的书架 - 会意</title>
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+    <script src="/static/tailwind.js"></script>
+    <link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet"
+        media="print" onload="this.media='all'" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+        <link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet" />
+    </noscript>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "xuan-paper": "#F9F5F0",
+                        "ink-dark": "#2C2C2C",
+                        "ink-soft": "#5A5A5A",
+                        "warm-red": "#A64D4D",
+                        "earth-brown": "#5d544b",
+                        "warm-gray": "#9e9a91",
+                    },
+                    fontFamily: {
+                        "serif": ["Noto Serif SC", "serif"],
+                        "sans": ["system-ui", "-apple-system", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            background-color: theme("colors.xuan-paper");
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+            color: theme("colors.ink-dark")
+        }
+        .serif-font {
+            font-family: "Noto Serif SC", serif
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 48
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+
+        /* 隐藏滚动条 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 移动端性能优化 */
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll !important;
+                background-size: cover !important;
+            }
+
+            * {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                box-shadow: none !important;
+                animation-duration: 0.1s !important;
+                transition-duration: 0.1s !important;
+            }
+
+            .backdrop-blur-sm,
+            .backdrop-blur-md,
+            .backdrop-blur-xl {
+                background-color: rgba(255, 255, 255, 0.98) !important;
+                border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            }
+
+            /* 底部导航栏特殊处理 */
+            nav.backdrop-blur-xl {
+                background-color: #F9F5F0 !important;
+                border-top: 1px solid rgba(93, 84, 75, 0.1) !important;
+            }
+
+            /* Reduce paint complexity */
+            img,
+            .animate-fade-in,
+            .animate-slide-up {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center pt-16 pb-32 px-6 overflow-x-hidden relative">
+
+    <div class="w-full max-w-md">
+        <!-- 头部欢迎语 -->
+        <div class="text-center mb-10">
+            <h1 class="serif-font text-3xl font-bold tracking-widest text-ink-dark">我的书架</h1>
+            <p class="serif-font text-sm tracking-[0.2em] text-ink-soft opacity-80 mt-2">今日宜读 · 静心感悟</p>
+        </div>
+
+        <!-- 正在阅读 -->
+        <div
+            class="bg-white/40 backdrop-blur-sm rounded-2xl p-6 border border-ink-dark/5 shadow-sm mb-6 relative overflow-hidden group">
+            <div
+                class="absolute right-[-20px] top-[-20px] opacity-10 rotate-12 group-hover:rotate-0 transition-transform duration-700">
+                <span class="material-symbols-outlined text-[150px]">auto_stories</span>
+            </div>
+            <h2 class="serif-font text-lg font-bold text-ink-dark mb-4 border-b border-ink-dark/10 pb-2">正在阅读</h2>
+            <div class="flex gap-4 items-start relative z-10">
+                <div id="current-read-cover"
+                    class="w-24 h-36 shrink-0 rounded shadow-md bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-400 text-xs">加载中</span>
+                </div>
+                <div class="flex-1">
+                    <h3 id="current-read-title" class="serif-font text-xl font-bold text-ink-dark">加载中...</h3>
+                    <p id="current-read-author" class="text-xs text-ink-soft mt-1">...</p>
+                    <div class="mt-4">
+                        <div class="flex justify-between text-[10px] text-ink-soft mb-1">
+                            <span id="current-read-progress-text">已读 0%</span>
+                            <span id="current-read-status">未开始</span>
+                        </div>
+                        <div class="h-1.5 bg-ink-dark/10 rounded-full overflow-hidden">
+                            <div id="current-read-progress-bar" class="h-full bg-warm-red/80 w-[0%]"></div>
+                        </div>
+                    </div>
+                    <a id="current-read-link" href="#"
+                        class="mt-4 inline-block px-4 py-1.5 bg-ink-dark text-xuan-paper text-xs tracking-widest rounded-full shadow hover:opacity-90 active:scale-95 transition-all">
+                        开始阅读
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 藏书列表容器 -->
+        <h2 class="serif-font text-lg font-bold text-ink-dark mb-4 pl-1">全部藏书</h2>
+        <div id="book-grid" class="grid grid-cols-2 gap-4 pb-20">
+            <!-- 动态内容将通过 JS 插入这里 -->
+            <div class="col-span-2 text-center py-10 text-ink-soft/50 text-xs">
+                正在加载书架...
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加书籍按钮 (悬浮) -->
+    <div class="fixed bottom-24 right-6 z-40">
+        <button onclick="document.getElementById('upload-input').click()"
+            class="bg-ink-dark text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all">
+            <span class="material-symbols-outlined">add</span>
+        </button>
+        <input type="file" id="upload-input" class="hidden" accept=".txt" onchange="handleUpload(this)">
+    </div>
+
+    <!-- 底部导航栏 -->
+    <nav
+        class="fixed bottom-0 left-0 right-0 bg-xuan-paper/95 backdrop-blur-xl border-t border-earth-brown/5 pb-8 pt-3 z-50">
+        <div class="flex justify-around px-8 max-w-[480px] mx-auto">
+            <a class="flex flex-col items-center gap-1.5 text-ink-dark" href="/bookshelf">
+                <span class="material-symbols-outlined text-2xl"
+                    style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+                <p class="text-[10px] font-medium tracking-widest serif-font">书架</p>
+            </a>
+            <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors"
+                href="/chat">
+                <span class="material-symbols-outlined text-2xl">chat_bubble_outline</span>
+                <p class="text-[10px] font-medium tracking-widest serif-font">对话</p>
+            </a>
+            <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors"
+                href="/profile">
+                <span class="material-symbols-outlined text-2xl"
+                    style="font-variation-settings: 'FILL' 1;">face_6</span>
+                <p class="text-[10px] font-medium tracking-widest serif-font">我的</p>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        const userId = localStorage.getItem('user_id');
+
+        // Gradient presets for dynamic covers
+        const COVER_GRADIENTS = [
+            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+            'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+            'linear-gradient(135deg, #96e6a1 0%, #d4fc79 100%)',
+        ];
+
+        function hashTitle(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return Math.abs(hash);
+        }
+
+        async function loadBooks() {
+            if (!userId) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/books?user_id=${userId}`);
+                const data = await res.json();
+
+                const grid = document.getElementById('book-grid');
+                grid.innerHTML = '';
+
+                if (data.books && data.books.length > 0) {
+                    // Get current reading book from API
+                    let currentBook = null;
+                    try {
+                        const currentRes = await fetch(`/api/current_book?user_id=${userId}`);
+                        const currentData = await currentRes.json();
+                        if (currentData.book_id) {
+                            currentBook = data.books.find(b => b.id === currentData.book_id);
+                        }
+                    } catch (e) { }
+
+                    // Fallback to first book if no current book
+                    if (!currentBook) {
+                        currentBook = data.books[0];
+                    }
+
+                    // Update "Currently Reading" section
+                    if (currentBook) {
+                        const coverIdx = hashTitle(currentBook.title) % COVER_GRADIENTS.length;
+                        document.getElementById('current-read-cover').style.background = COVER_GRADIENTS[coverIdx];
+                        document.getElementById('current-read-cover').innerHTML = `
+                            <div class="w-full h-full flex flex-col items-center justify-center text-white p-2">
+                                <span class="text-xs font-bold text-center line-clamp-3">${currentBook.title}</span>
+                            </div>
+                        `;
+                        document.getElementById('current-read-title').innerText = currentBook.title;
+                        document.getElementById('current-read-author').innerText = currentBook.author || '未知';
+                        document.getElementById('current-read-link').href = `/reader?book_id=${currentBook.id}`;
+
+                        // Read progress from localStorage
+                        const progressKey = `book_progress_?book_id=${currentBook.id}`;
+                        const savedProgress = localStorage.getItem(progressKey);
+                        let progress = 0;
+                        let status = '未开始';
+
+                        if (savedProgress) {
+                            try {
+                                const progressData = JSON.parse(savedProgress);
+                                progress = progressData.progress || 0;
+                                if (progress > 0 && progress < 100) {
+                                    status = '阅读中';
+                                } else if (progress >= 100) {
+                                    status = '已读完';
+                                }
+                            } catch (e) { }
+                        }
+
+                        document.getElementById('current-read-progress-text').innerText = `已读 ${progress}%`;
+                        document.getElementById('current-read-status').innerText = status;
+                        document.getElementById('current-read-progress-bar').style.width = `${progress}%`;
+                    }
+
+                    // Render all books with dynamic covers
+                    data.books.forEach(book => {
+                        const div = document.createElement('div');
+                        div.className = "bg-white/30 backdrop-blur-sm rounded-xl p-3 border border-ink-dark/5 flex flex-col items-center cursor-pointer active:scale-95 transition-transform";
+
+                        const coverIdx = hashTitle(book.title) % COVER_GRADIENTS.length;
+
+                        div.innerHTML = `
+                            <div class="w-24 h-36 rounded shadow-md flex items-center justify-center mb-3 relative overflow-hidden" style="background: ${COVER_GRADIENTS[coverIdx]}">
+                                <div class="absolute inset-0 bg-black/10"></div>
+                                <span class="text-white text-xs font-bold text-center px-2 line-clamp-3 relative z-10">${book.title}</span>
+                            </div>
+                            <h3 class="serif-font text-sm font-bold text-ink-dark text-center line-clamp-2 min-h-[1.25rem]">${book.title}</h3>
+                            <p class="text-[10px] text-ink-soft mt-0.5">${book.author || '未知'}</p>
+                        `;
+
+                        div.onclick = async () => {
+                            // Update current book before navigating
+                            await fetch('/api/update_current_book', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ user_id: userId, book_id: book.id })
+                            });
+                            window.location.href = `/reader?book_id=${book.id}`;
+                        };
+
+                        grid.appendChild(div);
+                    });
+                } else {
+                    grid.innerHTML = '<div class="col-span-2 text-center py-10 text-ink-soft/50 text-xs">暂无藏书，快上传一本吧</div>';
+                }
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function handleUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Limit size: 2MB
+            if (file.size > 2 * 1024 * 1024) {
+                alert("文件太大，请上传 2MB 以内的 TXT 文件");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64Content = e.target.result; // "data:text/plain;base64,....."
+
+                try {
+                    // Show loading
+                    const btn = document.querySelector('.fixed button');
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span>';
+
+                    const res = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            user_id: userId,
+                            filename: file.name,
+                            content: base64Content
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        alert("上传成功！");
+                        loadBooks(); // Reload list
+                    } else {
+                        alert("上传失败: " + data.error);
+                    }
+
+                    btn.innerHTML = originalHtml;
+                } catch (error) {
+                    alert("网络错误");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        loadBooks();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会意 - 页面预览索引</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #F9F5F0;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+            font-family: 'Noto Serif SC', serif;
+            color: #2C2C2C;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center py-16 px-4">
+    <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold tracking-widest text-[#2C2C2C]">页面概览</h1>
+            <p class="mt-2 text-[#5A5A5A] tracking-wider text-sm">会意 - 读书伴侣 App</p>
+        </div>
+
+        <div class="space-y-4">
+            <div
+                class="flex items-center justify-between text-xs text-[#5D544B]/60 px-2 font-sans tracking-widest uppercase mb-2">
+                <span>参考</span>
+            </div>
+            <a href="./书架首页_2/code.html"
+                class="block p-4 bg-white/60 backdrop-blur-sm border border-[#5d544b]/10 rounded-lg shadow-sm hover:bg-white/80 transition-all flex justify-between items-center group">
+                <span class="font-bold">参考风格 (书架首页_2)</span>
+                <span class="text-[#A64D4D] opacity-0 group-hover:opacity-100 transition-opacity">➜</span>
+            </a>
+
+            <div class="h-px bg-[#5d544b]/10 my-6"></div>
+
+            <div
+                class="flex items-center justify-between text-xs text-[#5D544B]/60 px-2 font-sans tracking-widest uppercase mb-2">
+                <span>已优化页面</span>
+            </div>
+            <a href="./书架首页_1/code.html"
+                class="block p-4 bg-white/60 backdrop-blur-sm border border-[#5d544b]/10 rounded-lg shadow-sm hover:bg-white/80 transition-all flex justify-between items-center group">
+                <span>书架首页</span>
+                <span class="text-[#5d544b] opacity-0 group-hover:opacity-100 transition-opacity">➜</span>
+            </a>
+            <a href="./个人中心与书友会/code.html"
+                class="block p-4 bg-white/60 backdrop-blur-sm border border-[#5d544b]/10 rounded-lg shadow-sm hover:bg-white/80 transition-all flex justify-between items-center group">
+                <span>个人中心与书友会</span>
+                <span class="text-[#5d544b] opacity-0 group-hover:opacity-100 transition-opacity">➜</span>
+            </a>
+            <a href="./ai_读书对话/code.html"
+                class="block p-4 bg-white/60 backdrop-blur-sm border border-[#5d544b]/10 rounded-lg shadow-sm hover:bg-white/80 transition-all flex justify-between items-center group">
+                <span>AI 读书对话</span>
+                <span class="text-[#5d544b] opacity-0 group-hover:opacity-100 transition-opacity">➜</span>
+            </a>
+            <a href="./阅读器界面/code.html"
+                class="block p-4 bg-white/60 backdrop-blur-sm border border-[#5d544b]/10 rounded-lg shadow-sm hover:bg-white/80 transition-all flex justify-between items-center group">
+                <span>阅读器界面</span>
+                <span class="text-[#5d544b] opacity-0 group-hover:opacity-100 transition-opacity">➜</span>
+            </a>
+            <a href="./阅读笔记与心法/code.html"
+                class="block p-4 bg-white/60 backdrop-blur-sm border border-[#5d544b]/10 rounded-lg shadow-sm hover:bg-white/80 transition-all flex justify-between items-center group">
+                <span>阅读笔记与心法</span>
+                <span class="text-[#5d544b] opacity-0 group-hover:opacity-100 transition-opacity">➜</span>
+            </a>
+        </div>
+
+        <div class="text-center mt-12">
+            <p class="text-[10px] text-[#5D544B]/40 tracking-[0.2em]">Designed by Antigravity</p>
+        </div>
+    </div>
+</body>
+
+</html>

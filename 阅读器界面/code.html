@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;family=Zhi+Mang+Xing&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "parchment": "#f4f1ea",
+                        "xuan-paper": "#F9F5F0",
+                        "ink": "#2C2C2C",
+                        "soft-gold": "#e2d1a6",
+                        "olive-light": "#d8e1c6",
+                        "huiyi-brown": "#7c6b5a"
+                    },
+                    fontFamily: {
+                        "serif": ["Noto Serif SC", "serif"],
+                        "handwriting": ["Zhi Mang+Xing", "cursive"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-xuan-paper text-ink font-serif;
+                background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+            }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-blur {
+            backdrop-filter: blur(8px);
+        }
+        .ai-bubble-gradient {
+            background: linear-gradient(135deg, rgba(226, 209, 166, 0.4), rgba(216, 225, 198, 0.4));
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <header
+            class="sticky top-0 z-30 flex items-center bg-xuan-paper/80 backdrop-blur-sm px-4 py-3 justify-between border-b border-black/5">
+            <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-huiyi-brown cursor-pointer">arrow_back_ios</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <h2 class="text-ink text-sm font-bold tracking-widest">理想国</h2>
+                <p class="text-[10px] text-huiyi-brown/60 uppercase tracking-tighter">The Republic</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-huiyi-brown">search</span>
+                <span class="material-symbols-outlined text-huiyi-brown">more_horiz</span>
+            </div>
+        </header>
+        <main class="flex-1 px-8 pt-10 pb-32 max-w-2xl mx-auto">
+            <header class="mb-12 text-center">
+                <p class="text-huiyi-brown/40 text-xs tracking-[0.2em] mb-2">— 第一卷 —</p>
+                <h1 class="text-2xl font-bold text-ink">正义的本质</h1>
+            </header>
+            <div class="space-y-8 text-lg leading-[2.2] text-ink/90">
+                <p>
+                    昨天，我和阿瑞斯托的儿子格劳孔一块儿下到比雷埃夫斯港去，向女神献祭；同时我也想看看他们第一次举行赛会的情况。我发现当地人的游行搞得很好，不过色雷斯人的游行也一点不差。
+                </p>
+                <div class="relative group">
+                    <span class="bg-olive-light/60 rounded-sm px-1 border-b border-olive-light">
+                        “那么，正义到底是什么？是否仅仅是说真话，有债还债？”
+                    </span>
+                    <div
+                        class="absolute -top-14 left-1/2 -translate-x-1/2 flex bg-[#333]/90 backdrop-blur-md text-white rounded-xl shadow-lg px-1 py-1 text-[13px] whitespace-nowrap border border-white/10 z-10">
+                        <button class="px-3 py-1 hover:bg-white/10 rounded-lg">拷贝</button>
+                        <div class="w-[1px] h-4 bg-white/20 self-center"></div>
+                        <button class="px-3 py-1 hover:bg-white/10 rounded-lg flex items-center gap-1 text-olive-light">
+                            <span class="material-symbols-outlined text-sm">auto_awesome</span>
+                            会意
+                        </button>
+                        <div class="w-[1px] h-4 bg-white/20 self-center"></div>
+                        <button class="px-3 py-1 hover:bg-white/10 rounded-lg">笔记</button>
+                    </div>
+                </div>
+                <p>
+                    克法洛斯笑了，他说：苏格拉底，你说得对。但我现在必须得去照看祭品了，我把接下来的辩论留给波勒马库斯和你们年轻人。
+                </p>
+                <p>
+                    于是，波勒马库斯接着说：苏格拉底，正义就是给每个人以他所应得的。这难道不是西蒙尼得斯所说的吗？
+                </p>
+                <p>
+                    我回答说：确实，西蒙尼得斯是一个睿智且神圣的人，很难不相信他的话。但是，他所说的“应得”究竟是什么意思呢？
+                </p>
+            </div>
+        </main>
+        <div class="fixed bottom-24 right-6 z-40">
+            <button
+                class="ai-bubble-gradient w-14 h-14 rounded-full flex items-center justify-center shadow-lg border border-white/50 group overflow-hidden">
+                <div class="absolute inset-0 bg-white/10 opacity-0 group-active:opacity-100 transition-opacity"></div>
+                <div class="flex flex-col items-center">
+                    <span
+                        class="material-symbols-outlined text-huiyi-brown text-3xl font-light">temp_preferences_custom</span>
+                </div>
+            </button>
+        </div>
+        <nav
+            class="fixed bottom-0 left-0 right-0 z-30 bg-xuan-paper/60 backdrop-blur-xl border-t border-black/5 pb-8 pt-4 px-10">
+            <div class="flex justify-between items-center max-w-md mx-auto">
+                <button
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                    <span class="text-[10px] font-medium tracking-tight">目录</span>
+                </button>
+                <button
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">settings_brightness</span>
+                    <span class="text-[10px] font-medium tracking-tight">亮度</span>
+                </button>
+                <button
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">text_format</span>
+                    <span class="text-[10px] font-medium tracking-tight">排版</span>
+                </button>
+                <button
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">bookmark_border</span>
+                    <span class="text-[10px] font-medium tracking-tight">书签</span>
+                </button>
+            </div>
+            <div
+                class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[9px] text-huiyi-brown/30 font-serif tracking-[0.3em]">
+                会意 · 懂书也懂你
+            </div>
+        </nav>
+    </div>
+
+</body>
+
+</html>

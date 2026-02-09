@@ -1,0 +1,194 @@
+<html class="light">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2C2C2C", // ink-dark
+            "xuan-paper": "#F9F5F0",
+            "warm-accent": "#5d544b", // earth-brown
+            "bubble-user": "#EFE9E1",
+            "border-soft": "#E5DED5"
+          },
+          fontFamily: {
+            "serif": ["'Noto Serif SC'", "serif"],
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.25rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style type="text/tailwindcss">
+    body {
+      min-height: max(884px, 100dvh);
+      background-color: theme("colors.xuan-paper");
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+
+<body class="bg-xuan-paper font-serif text-primary min-h-screen flex flex-col overflow-x-hidden">
+  <nav class="sticky top-0 z-50 bg-xuan-paper/90 backdrop-blur-md border-b border-border-soft">
+    <div class="flex items-center p-4 justify-between max-w-lg mx-auto w-full">
+      <div class="flex size-10 shrink-0 items-center justify-center cursor-pointer">
+        <span class="material-symbols-outlined text-primary">arrow_back_ios</span>
+      </div>
+      <div class="flex flex-col items-center">
+        <h2 class="text-lg font-bold leading-tight tracking-tight">会意</h2>
+        <span class="text-[10px] text-warm-accent uppercase tracking-[0.2em]">懂书也懂你</span>
+      </div>
+      <div class="flex size-10 items-center justify-end">
+        <button class="flex items-center justify-center rounded-lg h-10 w-10 hover:bg-black/5 transition-colors">
+          <span class="material-symbols-outlined text-primary">more_horiz</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <main class="flex-1 max-w-lg mx-auto w-full flex flex-col pb-40">
+    <div class="px-4 py-8">
+      <h4 class="text-warm-accent text-xs font-medium leading-normal tracking-[0.3em] text-center uppercase mb-2">正在探讨
+      </h4>
+      <h3 class="text-2xl font-bold text-center text-primary mb-1">《活着》</h3>
+      <p class="text-center text-sm text-warm-accent mb-4">余华</p>
+      <div class="flex justify-center">
+        <div
+          class="px-4 py-1 rounded-full border border-border-soft text-warm-accent text-[11px] font-medium tracking-wide">
+          深度解读模式
+        </div>
+      </div>
+    </div>
+    <div class="space-y-8">
+      <div class="flex items-start gap-4 px-6">
+        <div class="flex flex-1 flex-col gap-2 items-start relative">
+          <div class="absolute left-[-12px] top-0 bottom-0 w-[2px] bg-warm-accent/30 rounded-full"></div>
+          <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1">AI 读书助手</p>
+          <div class="text-[15px] leading-relaxed text-primary">
+            <p>你好！我是你的阅读伙伴。关于余华的《活着》，你想从哪个角度开始探讨？我们可以聊聊福贵的命运，或者是书中体现的生存哲学。</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-start gap-3 px-6 justify-end">
+        <div class="flex flex-col gap-1 items-end max-w-[85%]">
+          <p class="text-warm-accent text-[11px] font-medium mr-1 mb-1">我</p>
+          <div
+            class="text-[15px] leading-relaxed px-5 py-3 bg-bubble-user text-primary rounded-2xl rounded-tr-none shadow-sm border border-border-soft/50">
+            我想探讨一下“活着”这个概念在书中的核心定义。
+          </div>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 px-6">
+        <div class="flex flex-1 flex-col gap-2 items-start relative">
+          <div class="absolute left-[-12px] top-0 bottom-0 w-[2px] bg-warm-accent/30 rounded-full"></div>
+          <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1">AI 读书助手</p>
+          <div class="text-[15px] leading-relaxed text-primary">
+            <p class="mb-4">福贵这一形象深刻体现了人在苦难面前的坚韧。如书中第42页提到：</p>
+            <div class="pl-5 border-l-2 border-primary/20 italic text-primary/80 my-4 py-1 leading-loose">
+              "人是为了活着本身而活着的，而不是为了活着之外的任何事物而活着。"
+            </div>
+            <p class="mt-2">这句话剥离了所有社会属性和物质追求，将生命还原到了最纯粹的生存状态。这种坚韧在当时的社会变迁中显得尤为悲壮。</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-start gap-3 px-6 justify-end">
+        <div class="flex flex-col gap-1 items-end max-w-[85%]">
+          <p class="text-warm-accent text-[11px] font-medium mr-1 mb-1">我</p>
+          <div
+            class="text-[15px] leading-relaxed px-5 py-3 bg-bubble-user text-primary rounded-2xl rounded-tr-none shadow-sm border border-border-soft/50">
+            这种坚韧与当时的社会背景有什么关系吗？
+          </div>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 px-6">
+        <div class="flex flex-1 flex-col gap-2 items-start relative">
+          <div class="absolute left-[-12px] top-0 bottom-0 w-[2px] bg-warm-accent/30 rounded-full"></div>
+          <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1">AI 读书助手</p>
+          <div class="text-[15px] leading-relaxed text-primary">
+            <p>从历史语境来看，福贵的命运与20世纪中叶的中国农村变迁紧密相连。我们可以从以下几个维度来分析：</p>
+            <ul class="mt-4 space-y-3 list-none">
+              <li class="flex items-start gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-warm-accent mt-2 shrink-0"></span>
+                <span>土地改革对地主阶级的冲击</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-warm-accent mt-2 shrink-0"></span>
+                <span>战争对个人家庭结构的破坏</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-warm-accent mt-2 shrink-0"></span>
+                <span>大跃进与饥荒时期的生存挑战</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div
+    class="fixed bottom-0 left-0 right-0 bg-xuan-paper/95 backdrop-blur-md border-t border-border-soft pb-10 pt-4 px-4 z-50">
+    <div class="max-w-lg mx-auto">
+      <div class="flex gap-2 overflow-x-auto pb-4 no-scrollbar">
+        <button
+          class="whitespace-nowrap px-5 py-1.5 rounded-full bg-transparent border border-border-soft text-warm-accent text-xs font-medium hover:bg-bubble-user hover:text-primary transition-all">
+          总结当前章节
+        </button>
+        <button
+          class="whitespace-nowrap px-5 py-1.5 rounded-full bg-transparent border border-border-soft text-warm-accent text-xs font-medium hover:bg-bubble-user hover:text-primary transition-all">
+          人物性格分析
+        </button>
+        <button
+          class="whitespace-nowrap px-5 py-1.5 rounded-full bg-transparent border border-border-soft text-warm-accent text-xs font-medium hover:bg-bubble-user hover:text-primary transition-all">
+          历史背景参考
+        </button>
+        <button
+          class="whitespace-nowrap px-5 py-1.5 rounded-full bg-transparent border border-border-soft text-warm-accent text-xs font-medium hover:bg-bubble-user hover:text-primary transition-all">
+          写作手法探究
+        </button>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex-1 relative">
+          <input
+            class="w-full bg-white border border-border-soft rounded-2xl px-5 py-3.5 text-sm focus:ring-1 focus:ring-warm-accent focus:border-warm-accent placeholder-warm-accent/50 shadow-sm font-display"
+            placeholder="向 AI 提问关于本书的内容..." type="text" />
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-3 text-warm-accent/60">
+            <span
+              class="material-symbols-outlined text-xl cursor-pointer hover:text-primary transition-colors">mic</span>
+            <span
+              class="material-symbols-outlined text-xl cursor-pointer hover:text-primary transition-colors">attach_file</span>
+          </div>
+        </div>
+        <button
+          class="bg-primary text-cream h-[52px] w-[52px] flex items-center justify-center rounded-2xl shadow-lg active:scale-95 transition-transform">
+          <span class="material-symbols-outlined text-2xl">send</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

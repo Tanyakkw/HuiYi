@@ -1,0 +1,417 @@
+<html class="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content"
+        name="viewport" />
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.loli.net" crossorigin>
+    <link
+        href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+        <link
+            href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet" />
+    </noscript>
+    <script src="/static/tailwind.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2C2C2C", // ink-dark
+                        "xuan-paper": "#F9F5F0",
+                        "warm-accent": "#5d544b", // earth-brown
+                        "bubble-user": "#EFE9E1",
+                        "border-soft": "#E5DED5",
+                        // New Custom Colors
+                        "ai-bubble": "#E6DFD0", // Darker beige for AI
+                        "user-bubble": "#ECCFC9", // Flesh pink for User
+                    },
+                    fontFamily: {
+                        "serif": ["'Noto Serif SC'", "serif"],
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.25rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+      min-height: max(884px, 100dvh);
+      background-color: theme("colors.xuan-paper");
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+
+        /* 移动端性能优化 */
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll !important;
+                background-size: cover !important;
+            }
+
+            * {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                box-shadow: none !important;
+                animation-duration: 0.1s !important;
+                transition-duration: 0.1s !important;
+            }
+
+            .backdrop-blur-md,
+            .backdrop-blur-sm,
+            .backdrop-blur-xl {
+                background-color: rgba(255, 255, 255, 0.98) !important;
+                border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            }
+
+            /* Reduce paint complexity */
+            img,
+            .animate-fade-in,
+            .animate-slide-up {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-xuan-paper font-serif text-primary min-h-screen flex flex-col overflow-x-hidden">
+    <nav class="sticky top-0 z-50 bg-xuan-paper/90 backdrop-blur-md border-b border-border-soft">
+        <div class="flex items-center p-4 justify-between max-w-lg mx-auto w-full">
+            <a href="/bookshelf" class="flex size-10 shrink-0 items-center justify-center cursor-pointer">
+                <span class="material-symbols-outlined text-primary">arrow_back_ios</span>
+            </a>
+            <div class="flex flex-col items-center">
+                <h2 class="text-lg font-bold leading-tight tracking-tight">会意</h2>
+                <span class="text-[10px] text-warm-accent uppercase tracking-[0.2em]">懂书也懂你</span>
+            </div>
+            <div class="flex size-10 items-center justify-end">
+                <button
+                    class="flex items-center justify-center rounded-lg h-10 w-10 hover:bg-black/5 transition-colors">
+                    <span class="material-symbols-outlined text-primary">more_horiz</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <main class="flex-1 max-w-lg mx-auto w-full flex flex-col pb-40">
+        <div class="px-4 py-8 animate-fade-in" id="chat-intro-card">
+            <h4 class="text-warm-accent text-xs font-medium leading-normal tracking-[0.3em] text-center uppercase mb-2">
+                正在探讨
+            </h4>
+            <h3 class="text-2xl font-bold text-center text-primary mb-1" id="chat-header-title">...</h3>
+            <p class="text-center text-sm text-warm-accent mb-4" id="chat-header-subtitle">...</p>
+            <div class="flex justify-center">
+                <div
+                    class="px-4 py-1 rounded-full border border-border-soft text-warm-accent text-[11px] font-medium tracking-wide">
+                    深度解读模式
+                </div>
+            </div>
+            <!-- Initial AI Greeting Area -->
+            <div class="mt-8 text-ink-dark/80 text-[15px] leading-relaxed max-w-[90%] mx-auto text-center"
+                id="ai-greeting-text">
+
+            </div>
+        </div>
+
+        <!-- 聊天内容容器 -->
+        <div class="space-y-8" id="chat-container">
+            <!-- Messages will be appended here -->
+        </div>
+    </main>
+
+    <div
+        class="fixed bottom-0 left-0 right-0 bg-xuan-paper/95 backdrop-blur-md border-t border-border-soft pb-10 pt-4 px-4 z-50">
+        <div class="max-w-lg mx-auto">
+            <div class="flex gap-2 overflow-x-auto pb-4 no-scrollbar">
+                <button onclick="quickReply('总结当前章节')"
+                    class="whitespace-nowrap px-5 py-1.5 rounded-full bg-transparent border border-border-soft text-warm-accent text-xs font-medium hover:bg-bubble-user hover:text-primary transition-all">
+                    总结当前章节
+                </button>
+                <button onclick="quickReply('人物性格分析')"
+                    class="whitespace-nowrap px-5 py-1.5 rounded-full bg-transparent border border-border-soft text-warm-accent text-xs font-medium hover:bg-bubble-user hover:text-primary transition-all">
+                    人物性格分析
+                </button>
+                <button onclick="quickReply('历史背景参考')"
+                    class="whitespace-nowrap px-5 py-1.5 rounded-full bg-transparent border border-border-soft text-warm-accent text-xs font-medium hover:bg-bubble-user hover:text-primary transition-all">
+                    历史背景参考
+                </button>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex-1 relative">
+                    <input id="message-input"
+                        class="w-full bg-white border border-border-soft rounded-2xl px-5 py-3.5 text-sm focus:ring-1 focus:ring-warm-accent focus:border-warm-accent placeholder-warm-accent/50 shadow-sm font-display"
+                        placeholder="向 AI 提问关于本书的内容..." type="text" />
+                    <div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-3 text-warm-accent/60">
+                        <span
+                            class="material-symbols-outlined text-xl cursor-pointer hover:text-primary transition-colors">mic</span>
+                        <span
+                            class="material-symbols-outlined text-xl cursor-pointer hover:text-primary transition-colors">attach_file</span>
+                    </div>
+                </div>
+                <button id="send-btn" onclick="sendMessage()"
+                    class="bg-user-bubble text-primary h-[52px] w-[52px] flex items-center justify-center rounded-2xl shadow-lg active:scale-95 transition-transform border border-warm-accent/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="currentColor" id="send-icon">
+                        <path
+                            d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        let isProcessing = false;
+
+        // Context Management
+        let currentBookContext = "";
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('book_id');
+
+        async function initChatContext() {
+            // Hide intro card initially until data loaded
+            const introCard = document.getElementById('chat-intro-card');
+
+            if (bookId) {
+                // Specific book context (from Reader)
+                try {
+                    const res = await fetch(`/api/book_content?book_id=${bookId}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        currentBookContext = data.content ? data.content.substring(0, 10000) : "";
+
+                        // Update Header
+                        const titleEl = document.getElementById('chat-header-title');
+                        const subtitleEl = document.getElementById('chat-header-subtitle');
+
+                        if (titleEl) titleEl.innerText = `《${data.title}》`;
+                        if (subtitleEl) subtitleEl.innerText = data.author || '';
+
+                        // Update Greeting
+                        const greeting = `你好！我是你的阅读伙伴。关于${data.author ? data.author + '的' : ''}《${data.title}》，你想从哪个角度开始探讨？我们聊聊书中的人物，或者它反映的社会现象？`;
+                        renderGreetingBubble(greeting);
+                    }
+                } catch (e) {
+                    console.error("Failed to load context", e);
+                }
+            } else {
+                // Generic context (from Bookshelf) - Use current_book API
+                try {
+                    const userId = localStorage.getItem('user_id');
+                    if (userId) {
+                        // First try to get the user's actual current book
+                        const currentRes = await fetch(`/api/current_book?user_id=${userId}`);
+                        if (currentRes.ok) {
+                            const currentData = await currentRes.json();
+
+                            const titleEl = document.getElementById('chat-header-title');
+                            const subtitleEl = document.getElementById('chat-header-subtitle');
+
+                            if (currentData.book_id) {
+                                // Fetch book content for context
+                                const bookRes = await fetch(`/api/book_content?book_id=${currentData.book_id}`);
+                                if (bookRes.ok) {
+                                    const bookData = await bookRes.json();
+                                    currentBookContext = bookData.content ? bookData.content.substring(0, 10000) : "";
+                                }
+
+                                // Update Header
+                                if (titleEl) titleEl.innerText = `《${currentData.title}》`;
+                                if (subtitleEl) subtitleEl.innerText = currentData.author || '深度解读中';
+
+                                // Update Greeting
+                                const greeting = `你好！我是你的阅读伙伴。关于${currentData.author ? currentData.author + '的' : ''}《${currentData.title}》，你想从哪个角度开始探讨？我们聊聊书中的人物，或者它反映的社会现象？`;
+                                renderGreetingBubble(greeting);
+                            } else {
+                                if (titleEl) titleEl.innerText = "暂无书籍";
+                                renderGreetingBubble('👋 嗨！我是会意。您的书架还空着，去上传几本好书吧。');
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to load current book", e);
+                }
+            }
+        }
+
+        // Render Greeting in Unified Bubble Style
+        function renderGreetingBubble(text) {
+            const container = document.getElementById('ai-greeting-text');
+            if (!container) return;
+
+            // Left-aligned Bubble Style (Darker Beige)
+            container.innerHTML = `
+                <div class="flex flex-col items-start text-left animate-slide-up">
+                    <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1 ml-1">会意</p>
+                    <div class="bg-ai-bubble border border-warm-accent/10 px-5 py-4 rounded-2xl rounded-tl-sm shadow-sm text-[15px] leading-relaxed text-primary text-left">
+                        ${text}
+                    </div>
+                </div>
+            `;
+            container.className = "mt-8 max-w-[90%] mx-auto";
+        }
+
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || isProcessing) return;
+
+            // UI Updates
+            messageInput.value = '';
+            adjustHeight(messageInput);
+            appendMessage('user', text);
+
+            isProcessing = true;
+            sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Add loading bubble
+            const loadingId = appendLoading();
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        user_id: localStorage.getItem('user_id'),
+                        book_context: currentBookContext // Pass context!
+                    })
+                });
+
+                if (!response.ok) throw new Error('Network error');
+
+                const data = await response.json();
+                removeLoading(loadingId);
+                appendMessage('ai', data.response);
+
+            } catch (error) {
+                removeLoading(loadingId);
+                appendMessage('system', '网络连接似乎断开了，请稍后再试。');
+            } finally {
+                isProcessing = false;
+                sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                // Ensure scroll to bottom
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }
+        }
+
+        function appendMessage(role, text) {
+            const isUser = role === 'user';
+            const isSystem = role === 'system';
+
+            // Parse markdown newlines
+            const formattedText = text.replace(/\n/g, '<br>');
+
+            let html = '';
+            if (isUser) {
+                // User Bubble: Flesh Pink (user-bubble), Text Dark
+                html = `
+            <div class="flex items-start gap-3 px-6 justify-end message-item">
+                <div class="flex flex-col gap-1 items-end max-w-[85%]">
+                    <p class="text-warm-accent text-[11px] font-medium mr-1 mb-1">我</p>
+                    <div class="bg-user-bubble text-primary rounded-2xl rounded-tr-sm px-5 py-3 shadow-sm text-[15px] leading-relaxed break-words border border-warm-accent/5">
+                        ${formattedText}
+                    </div>
+                </div>
+            </div>`;
+            } else if (isSystem) {
+                html = `
+            <div class="flex justify-center px-6 message-item">
+                <div class="bg-warm-accent/10 text-warm-accent rounded-full px-4 py-1 text-xs font-medium">
+                    ${text}
+                </div>
+            </div>`;
+            } else {
+                // AI Response: Unified Bubble Style (bg-ai-bubble)
+                html = `
+            <div class="flex items-start gap-4 px-6 message-item">
+                <div class="flex flex-col items-start gap-1 max-w-[90%]">
+                    <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1 ml-1">会意</p>
+                    <div class="bg-ai-bubble border border-warm-accent/10 px-5 py-4 rounded-2xl rounded-tl-sm shadow-sm text-[15px] leading-relaxed text-primary">
+                        ${formattedText}
+                    </div>
+                </div>
+            </div>`;
+            }
+
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            chatContainer.appendChild(div);
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        // Helper: Loading
+        function appendLoading() {
+            const id = 'loading-' + Date.now();
+            const html = `
+            <div id="${id}" class="flex items-start gap-4 px-6 message-item">
+                 <div class="flex flex-col items-start gap-1 max-w-[90%]">
+                    <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1 ml-1">会意</p>
+                    <div class="bg-ai-bubble/50 rounded-2xl rounded-tl-sm px-4 py-2 flex gap-1 items-center">
+                        <div class="w-1.5 h-1.5 bg-warm-accent/40 rounded-full animate-bounce"></div>
+                        <div class="w-1.5 h-1.5 bg-warm-accent/40 rounded-full animate-bounce delay-100"></div>
+                        <div class="w-1.5 h-1.5 bg-warm-accent/40 rounded-full animate-bounce delay-200"></div>
+                    </div>
+                </div>
+            </div>`;
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            chatContainer.appendChild(div);
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            return id;
+        }
+
+        function removeLoading(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function quickReply(text) {
+            messageInput.value = text;
+            sendMessage();
+        }
+
+        function adjustHeight(el) {
+            // Placeholder
+        }
+
+        // Enter key listener
+        if (messageInput) {
+            messageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+
+        // Start Initialization
+        initChatContext();
+    </script>
+
+</body>
+
+</html>

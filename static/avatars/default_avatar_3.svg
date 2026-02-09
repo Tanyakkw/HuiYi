@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="#98D8C8"/>
+  <!-- Book -->
+  <rect x="25" y="30" width="50" height="45" rx="2" fill="#8B4513"/>
+  <rect x="28" y="33" width="22" height="39" fill="#FFF8DC"/>
+  <rect x="52" y="33" width="22" height="39" fill="#FFFAF0"/>
+  <!-- Book spine -->
+  <rect x="48" y="30" width="4" height="45" fill="#654321"/>
+  <!-- Lines on pages -->
+  <line x1="32" y1="42" x2="46" y2="42" stroke="#DDD" stroke-width="1"/>
+  <line x1="32" y1="48" x2="46" y2="48" stroke="#DDD" stroke-width="1"/>
+  <line x1="32" y1="54" x2="46" y2="54" stroke="#DDD" stroke-width="1"/>
+  <line x1="32" y1="60" x2="44" y2="60" stroke="#DDD" stroke-width="1"/>
+  <line x1="56" y1="42" x2="70" y2="42" stroke="#DDD" stroke-width="1"/>
+  <line x1="56" y1="48" x2="70" y2="48" stroke="#DDD" stroke-width="1"/>
+  <line x1="56" y1="54" x2="70" y2="54" stroke="#DDD" stroke-width="1"/>
+  <line x1="56" y1="60" x2="68" y2="60" stroke="#DDD" stroke-width="1"/>
+</svg>

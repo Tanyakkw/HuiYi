@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <title>欢迎 - 会意</title>
+    <script src="/static/tailwind.js"></script>
+    <link href="https://fonts.loli.net/css2?family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "xuan-paper": "#F9F5F0",
+                        "ink-dark": "#2C2C2C",
+                        "ink-soft": "#5A5A5A",
+                        "warm-red": "#A64D4D",
+                    },
+                    fontFamily: {
+                        "serif": ["Noto Serif SC", "serif"],
+                        "sans": ["system-ui", "-apple-system", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        /* body background moved to standard CSS below for reliability */
+        body {
+            color: theme("colors.ink-dark")
+        }
+        .serif-font {
+            font-family: "Noto Serif SC", serif
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 48
+        }
+        .logo-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center
+        }
+        .heart-overlay {
+            position: absolute;
+            font-variation-settings: "FILL" 1, "wght" 400;
+            opacity: 0.8;
+            color: theme("colors.warm-red");
+            font-size: 1.5rem;
+            bottom: 2px;
+            right: -4px
+        }
+        /* Modal Animation */
+        .modal {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+    </style>
+    <style>
+        body {
+            /* 复刻用户要求的背景图片 */
+            background-color: #F9F5F0;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+            background-attachment: fixed;
+            background-size: cover;
+            min-height: max(884px, 100dvh);
+            color: #2C2C2C;
+        }
+
+        /* 移动端性能优化：移除昂贵特效 + 修复背景不显示 */
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll !important;
+            }
+
+            * {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                box-shadow: none !important;
+            }
+
+            /* 为原本依赖模糊背景的元素添加纯色兜底 */
+            .bg-white\/60,
+            .bg-white\/40,
+            .backdrop-blur-md,
+            .backdrop-blur-sm {
+                background-color: rgba(255, 255, 255, 0.95) !important;
+                border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-between px-8 py-16 overflow-hidden relative">
+
+    <!-- Main Content -->
+    <div class="h-10"></div>
+    <div class="flex flex-col items-center text-center space-y-8 z-10">
+        <div class="logo-container mb-4">
+            <span class="material-symbols-outlined text-[80px] text-ink-dark opacity-90">
+                auto_stories
+            </span>
+            <span class="material-symbols-outlined heart-overlay">
+                favorite
+            </span>
+        </div>
+        <div class="space-y-4">
+            <h1 class="serif-font text-5xl font-bold tracking-widest text-ink-dark">会意</h1>
+            <p class="serif-font text-lg tracking-[0.3em] text-ink-soft opacity-80 mt-2">懂书也懂你</p>
+        </div>
+    </div>
+    <div class="w-full max-w-xs flex flex-col items-center space-y-6 z-10 transition-all duration-500"
+        id="main-actions">
+        <button onclick="openModal('register')"
+            class="w-full py-4 px-8 rounded-full border border-ink-dark/10 bg-white/50 backdrop-blur-sm shadow-sm active:scale-95 transition-all duration-200 hover:bg-white/80">
+            <span class="serif-font text-lg font-medium tracking-widest text-ink-dark">开始阅读</span>
+        </button>
+        <button onclick="openModal('login')" class="px-4 py-2 text-ink-soft/60 active:opacity-60 transition-opacity">
+            <span class="serif-font text-sm tracking-widest">已有账号？登录</span>
+        </button>
+        <div class="h-2"></div>
+    </div>
+
+    <!-- Auth Modal (Shared for Login/Register) -->
+    <div id="auth-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-ink-dark/20 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div
+            class="bg-xuan-paper w-full max-w-sm rounded-[2rem] shadow-xl border border-white/20 p-8 relative z-10 paper-texture max-h-[90vh] overflow-y-auto no-scrollbar">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-ink-soft/50 hover:text-ink-dark">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <h2 id="modal-title" class="serif-font text-2xl font-bold text-ink-dark mb-6 text-center"></h2>
+
+            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-ink-soft tracking-widest uppercase mb-1 ml-2">用户名</label>
+                    <input type="text" id="username" required
+                        class="w-full bg-white/60 border-0 border-b border-ink-soft/20 px-4 py-3 text-ink-dark focus:ring-0 focus:border-warm-red transition-all placeholder-ink-soft/30 rounded-t-lg"
+                        placeholder="输入您的雅号">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-ink-soft tracking-widest uppercase mb-1 ml-2">密码</label>
+                    <input type="password" id="password" required
+                        class="w-full bg-white/60 border-0 border-b border-ink-soft/20 px-4 py-3 text-ink-dark focus:ring-0 focus:border-warm-red transition-all placeholder-ink-soft/30 rounded-t-lg"
+                        placeholder="......">
+                </div>
+
+                <!-- 注册专用字段 -->
+                <div id="register-fields" class="space-y-5 hidden">
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-ink-soft tracking-widest uppercase mb-1 ml-2">个性签名</label>
+                        <input type="text" id="signature"
+                            class="w-full bg-white/60 border-0 border-b border-ink-soft/20 px-4 py-3 text-ink-dark focus:ring-0 focus:border-warm-red transition-all placeholder-ink-soft/30 rounded-t-lg"
+                            placeholder="写一句喜欢的话...">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-ink-soft tracking-widest uppercase mb-1 ml-2">头像</label>
+                        <div class="flex justify-around p-2 bg-white/60 rounded-lg border border-ink-soft/20">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="avatar" value="default_avatar_1.svg" class="hidden" checked>
+                                <img src="/static/avatars/default_avatar_1.svg"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    alt="Avatar 1">
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="avatar" value="default_avatar_2.svg" class="hidden">
+                                <img src="/static/avatars/default_avatar_2.svg"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    alt="Avatar 2">
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="avatar" value="default_avatar_3.svg" class="hidden">
+                                <img src="/static/avatars/default_avatar_3.svg"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    alt="Avatar 3">
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="avatar" value="default_avatar_4.svg" class="hidden">
+                                <img src="/static/avatars/default_avatar_4.svg"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    alt="Avatar 4">
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="avatar" value="default_avatar_5.svg" class="hidden">
+                                <img src="/static/avatars/default_avatar_5.svg"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    alt="Avatar 5">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" id="submit-btn"
+                        class="w-full py-3 rounded-xl bg-ink-dark text-xuan-paper font-bold tracking-widest shadow-lg active:scale-95 transition-all">
+                        确定
+                    </button>
+                </div>
+            </form>
+            <div id="error-msg" class="mt-4 text-center text-warm-red text-sm opacity-0 transition-opacity serif-font">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'login'; // 'login' or 'register'
+
+        function openModal(mode) {
+            currentMode = mode;
+            const title = mode === 'login' ? '重逢' : '初见';
+            const btnText = mode === 'login' ? '回来读书' : '开启旅程';
+
+            // 切换注册字段显示
+            const regFields = document.getElementById('register-fields');
+            if (mode === 'register') {
+                regFields.classList.remove('hidden');
+            } else {
+                regFields.classList.add('hidden');
+            }
+
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('submit-btn').innerText = btnText;
+            document.getElementById('auth-modal').classList.add('active');
+            document.getElementById('main-actions').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('error-msg').style.opacity = '0';
+            document.getElementById('auth-form').reset();
+        }
+
+        function closeModal() {
+            document.getElementById('auth-modal').classList.remove('active');
+            document.getElementById('main-actions').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        async function handleAuth(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const signature = document.getElementById('signature').value;
+            const btn = document.getElementById('submit-btn');
+            const errorMsg = document.getElementById('error-msg');
+
+            btn.disabled = true;
+            btn.classList.add('opacity-70');
+            errorMsg.style.opacity = '0';
+
+            const endpoint = currentMode === 'login' ? '/api/login' : '/api/register';
+
+            const payload = { username, password };
+            if (currentMode === 'register') {
+                payload.signature = signature;
+                // 获取选中的头像值
+                const selectedAvatar = document.querySelector('input[name="avatar"]:checked');
+                payload.avatar = selectedAvatar ? selectedAvatar.value : 'default_avatar_1.svg'; // 默认值以防万一
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // 成功，跳转到书架
+                    // 可以保存 user_id 到 localStorage，这里简单处理直接跳转
+                    localStorage.setItem('user_id', data.user_id);
+                    localStorage.setItem('username', username);
+                    window.location.href = '/bookshelf';
+                } else {
+                    throw new Error(data.error || '请求失败');
+                }
+            } catch (error) {
+                errorMsg.innerText = error.message;
+                errorMsg.style.opacity = '1';
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-70');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

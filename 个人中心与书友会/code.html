@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "xuan-paper": "#F9F5F0",
+            "ink-dark": "#2C2C2C",
+            "ink-soft": "#5A5A5A",
+            "warm-red": "#A64D4D",
+            "earth-brown": "#5d544b",
+            "warm-gray": "#9e9a91",
+            "xuan-border": "#e8e0d5",
+          },
+          fontFamily: {
+            "serif": ["Noto Serif SC", "serif"],
+            "sans": ["Noto Sans SC", "system-ui", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <title>会意 - 个人中心</title>
+  <style type="text/tailwindcss">
+    body {
+      background-color: theme("colors.xuan-paper");
+      background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+      color: theme("colors.ink-dark");
+    }
+    .serif-font {
+      font-family: "Noto Serif SC", serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+
+<body class="bg-xuan-paper font-sans text-ink-dark">
+  <div
+    class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden max-w-[480px] mx-auto">
+    <!-- TopAppBar -->
+    <div
+      class="flex items-center bg-xuan-paper/90 backdrop-blur-md p-4 pb-2 justify-between sticky top-0 z-10 border-b border-earth-brown/5">
+      <div class="w-12"></div>
+      <div class="flex flex-col items-center">
+        <h2 class="serif-font text-ink-dark text-lg font-bold leading-tight tracking-widest">个人中心</h2>
+        <p class="text-[10px] tracking-[0.2em] text-warm-gray uppercase mt-0.5">懂书也懂你</p>
+      </div>
+      <div class="flex w-12 items-center justify-end">
+        <button
+          class="flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 w-10 bg-transparent text-earth-brown">
+          <span class="material-symbols-outlined text-[24px]">settings</span>
+        </button>
+      </div>
+    </div>
+    <!-- ProfileHeader -->
+    <div class="flex p-6 @container">
+      <div class="flex w-full flex-col gap-4">
+        <div class="flex items-center gap-6">
+          <div
+            class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24 border-2 border-white shadow-sm"
+            data-alt="User profile picture showing a calm landscape"
+            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCgg7RtYsVvfjIoNhn2rpfwsM_i2dcA0vRD9j7mb_grM-WbRmrx4FO-CTr-j4oWrKWQvrrd1uHNRMpHPJ7zTsPmr9-QlRo4kr2PNXj6eR1Z1J5f5E8rIqISmoGFkaFqk7KZDE6B6xXuQvEJ1iZpLJm0jfIQqRhQi_ef__rWSzNOrsHnTlpmy6fDkbjOuEorPW3OLw9Dx8NLkkPTWBPrlYK4Do9VQDOqwxj_O2v0bkAVVD3rII7GnSpaEHF4BeLDZecDxe7l3KTLCbzI");'>
+          </div>
+          <div class="flex flex-col justify-center">
+            <p class="serif-font text-ink-dark text-[24px] font-bold leading-tight tracking-wide">林深处</p>
+            <p class="text-warm-red font-medium text-sm mt-1 italic serif-font">懂书也懂你</p>
+            <div class="flex gap-3 mt-2">
+              <span class="text-earth-brown text-xs font-medium px-2 py-1 bg-warm-red/10 rounded-full">书龄: 3.5年</span>
+              <span class="text-earth-brown text-xs font-medium px-2 py-1 bg-warm-red/10 rounded-full">阅读量: 142本</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SectionHeader: Favorite Books -->
+    <div class="flex items-center justify-between px-4 mt-2">
+      <h3 class="serif-font text-ink-dark text-lg font-bold leading-tight tracking-wide">我的书魂</h3>
+    </div>
+    <!-- ImageGrid: Book Soulmates -->
+    <div class="grid grid-cols-3 gap-3 p-4">
+      <div
+        class="bg-cover bg-center flex flex-col gap-3 rounded-sm justify-end p-2 aspect-[3/4.5] shadow-[5px_5px_15px_rgba(0,0,0,0.08)] border border-xuan-border"
+        data-alt="Book cover for The Kite Runner"
+        style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 60%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC-Otfwm45o2jVRAnUPs4T1gd9hEBh5VAZR2_JVaKVTc2MPn3PQSa1Npk5H0kyunF4swbLaYsdYMGUKuou1knoq5UHm1TN7Lg6VDBVob5grgwohS0DATl_6rn5Zal_nY9BR6xjVK-rUFd137cAKK_LEDR4R1j9I2bNRqYjOTeGAIsuMzJpoU2BS4Gx_oxRlz2nSEkfHGmutIsj6NcJcBdFpOz9UsJdeKezI5JuBJBUDy7Gri5zsW0dhqUP5U-kzenUpDtgEhq9vAuoa");'>
+        <p class="text-white text-[10px] font-bold leading-tight line-clamp-2 serif-font">《追风筝的人》</p>
+      </div>
+      <div
+        class="bg-cover bg-center flex flex-col gap-3 rounded-sm justify-end p-2 aspect-[3/4.5] shadow-[5px_5px_15px_rgba(0,0,0,0.08)] border border-xuan-border"
+        data-alt="Book cover for The Little Prince"
+        style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 60%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC1_SRiGSesY2ltqHz1ijcG595_8yx7shajNBj60qoo_jhPD8m42EPt7FDw7yEi2zIqLqCIYxJYO06aX2wpM8YfkZxNfpckKfCr0hmkS1O5H_Sc3jzEls_GETn705wTB0ie8UNb9szqxJHAKlE9rVvE2eauwOTE_hQeRk1blNh_dYReUI6BTmspoAGFUi7RLaGTiUSvmcu1dRdG2_sqF7HLBmdOPnzVelj8fp41sJyDDgH4z908J85VT6zSG9mP_E_7t6uEEqy0PNPm");'>
+        <p class="text-white text-[10px] font-bold leading-tight line-clamp-2 serif-font">《小王子》</p>
+      </div>
+      <div
+        class="bg-cover bg-center flex flex-col gap-3 rounded-sm justify-end p-2 aspect-[3/4.5] shadow-[5px_5px_15px_rgba(0,0,0,0.08)] border border-xuan-border"
+        data-alt="Book cover for One Hundred Years of Solitude"
+        style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 60%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAp91kvSf_PBHTkUVPOS8PufYEw_TWMuwIIvMWlqiFrcoor51ODG0cnBgtoVl6Y5fpcnvFlWiYjAd_S6qKrpsoXY-cHDgRbdD-qfJaXBDFu60n0Q7rXnU1XgcCGuL5hO3girSri1Ty0fa-lpR9WFldt8HqTRm3D58ZnHn13CPKLRcQgtkMOgN1MgpJpKCRSH7kRFQBd5phxCHBF7Gmq3ZL_0mofau_47V5ZmHOG3cjEuL-0rqMhzhov79V6q1hxeiemmx_IsLZfstAD");'>
+        <p class="text-white text-[10px] font-bold leading-tight line-clamp-2 serif-font">《百年孤独》</p>
+      </div>
+    </div>
+    <!-- SingleButton: Find Soulmates -->
+    <div class="flex px-4 py-2">
+      <button
+        class="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-4 border border-ink-dark/10 bg-white/50 backdrop-blur-sm shadow-sm active:scale-95 transition-all gap-2">
+        <span class="material-symbols-outlined text-earth-brown">diversity_3</span>
+        <span class="truncate font-medium text-sm tracking-widest serif-font text-ink-dark">寻找书友</span>
+      </button>
+    </div>
+    <!-- Divider -->
+    <div class="px-4 py-6">
+      <div class="h-[1px] bg-earth-brown/10"></div>
+    </div>
+    <!-- Menu List -->
+    <div class="flex flex-col px-4 gap-2">
+      <!-- Personal Information -->
+      <button
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">badge</span>
+          <span class="text-ink-dark font-medium serif-font">个人信息</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+      <!-- Reading Statistics -->
+      <button
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">monitoring</span>
+          <span class="text-ink-dark font-medium serif-font">阅读统计</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+      <!-- My Community -->
+      <button
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">forum</span>
+          <span class="text-ink-dark font-medium serif-font">我的社群</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+      <!-- Settings -->
+      <button
+        class="flex items-center justify-between p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-earth-brown/5 hover:bg-white/70 transition-colors">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-earth-brown">tune</span>
+          <span class="text-ink-dark font-medium serif-font">偏好设置</span>
+        </div>
+        <span class="material-symbols-outlined text-warm-gray">chevron_right</span>
+      </button>
+    </div>
+    <!-- Bottom Padding -->
+    <div class="h-28 bg-transparent"></div>
+    <!-- Bottom Navigation - Matching 书架首页_1 style -->
+    <nav
+      class="fixed bottom-0 left-0 right-0 bg-xuan-paper/95 backdrop-blur-xl border-t border-earth-brown/5 pb-8 pt-3 z-50">
+      <div class="flex justify-around px-8 max-w-[480px] mx-auto">
+        <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors" href="#">
+          <span class="material-symbols-outlined text-2xl">auto_stories</span>
+          <p class="text-[10px] font-medium tracking-widest serif-font">书架</p>
+        </a>
+        <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors" href="#">
+          <span class="material-symbols-outlined text-2xl">chat_bubble_outline</span>
+          <p class="text-[10px] font-medium tracking-widest serif-font">对话</p>
+        </a>
+        <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors" href="#">
+          <span class="material-symbols-outlined text-2xl">diversity_3</span>
+          <p class="text-[10px] font-medium tracking-widest serif-font">书友</p>
+        </a>
+        <a class="flex flex-col items-center gap-1.5 text-ink-dark" href="#">
+          <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">face_6</span>
+          <p class="text-[10px] font-medium tracking-widest serif-font">我的</p>
+        </a>
+      </div>
+    </nav>
+  </div>
+</body>
+
+</html>

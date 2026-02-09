@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5d544b", // earth-brown
+                        "accent": "#A64D4D",  // warm-red
+                        "xuan-paper": "#F9F5F0",
+                        "ink-dark": "#2C2C2C",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                        "serif": ["'Noto Serif SC'", "serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.6rem", "xl": "1rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">@layer base {
+    body {
+        @apply bg-xuan-paper text-ink-dark font-serif;
+        }
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24
+    }
+.paper-texture {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+    background-repeat: repeat
+    }</style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-xuan-paper text-ink-dark">
+    <div
+        class="relative flex h-auto min-h-screen w-full flex-col max-w-[430px] mx-auto bg-xuan-paper overflow-x-hidden paper-texture">
+        <div
+            class="flex items-center bg-xuan-paper/80 backdrop-blur-md p-4 pb-2 justify-between sticky top-0 z-50 border-b border-ink-dark/5">
+            <div class="text-ink-dark/60 flex size-12 shrink-0 items-center">
+                <span class="material-symbols-outlined">menu</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <h2 class="text-ink-dark text-base font-serif font-bold leading-tight">会意 · 心经风
+                </h2>
+                <p class="text-[10px] text-ink-dark/40 uppercase tracking-widest font-sans">懂书也懂你</p>
+            </div>
+            <div class="flex w-12 items-center justify-end">
+                <button class="flex items-center justify-center text-ink-dark/60">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+            </div>
+        </div>
+        <div class="pb-3 px-4">
+            <div class="flex border-b border-stone-200 dark:border-stone-800 gap-8">
+                <a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-2 pt-4"
+                    href="#">
+                    <p class="text-xs font-semibold tracking-wide">精选心法</p>
+                </a>
+                <a class="flex flex-col items-center justify-center border-b-2 border-transparent text-stone-400 dark:text-stone-500 pb-2 pt-4"
+                    href="#">
+                    <p class="text-xs font-semibold tracking-wide">我的笔记</p>
+                </a>
+            </div>
+        </div>
+        <div class="px-5 pt-6 flex items-center justify-between">
+            <h3 class="text-stone-800 dark:text-stone-100 text-lg font-serif font-bold">AI 深度心法</h3>
+            <span class="material-symbols-outlined text-primary">spa</span>
+        </div>
+        <div class="p-4">
+            <div
+                class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-stone-900/50 border border-stone-200 dark:border-stone-800 overflow-hidden">
+                <div class="w-full bg-center bg-no-repeat aspect-[16/7] bg-cover grayscale-[30%] opacity-90"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3cRBxRtjE8y2FJ06rEYBNBCVLBVYPj4zo8MJnnWAHshoW9zr16ldjvVJ6ZRF13ehI-19phjnwiiDC4AKvOa5Fxx1hRfzcb6K9H1zSO49xCTmK7F7TW0L2KvySn_1SE3J7H5aTpz_Nz9owci5n5kAbnJnvmzZc_Z9-hChzLvF6WfY4oI61PYaz18pHumMEzFZgxM_Pb8U8MhnnfB0E_4bml_EQunxdITAy364dONE4hLbOQdp994BVMBs2lZQcfwH5jttDYfNnN9us");'>
+                </div>
+                <div class="flex flex-col p-5 gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-accent text-sm">auto_stories</span>
+                        <p class="text-stone-500 dark:text-stone-400 text-[10px] font-medium uppercase tracking-widest">
+                            《大学》· 儒家经典</p>
+                    </div>
+                    <p class="text-stone-800 dark:text-stone-100 text-base font-serif font-bold leading-snug">
+                        “格物致知”的现代认知科学诠释</p>
+                    <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed font-serif">
+                        所谓格物致知，在现代视角下不仅是观察事物，更是通过高频的实践反馈回路，将外部信息转化为内在的神经连接与直觉。</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-6 h-6 rounded-full border border-stone-200 dark:border-stone-700 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-[12px] text-primary">cognition</span>
+                            </div>
+                        </div>
+                        <button
+                            class="px-4 py-1.5 rounded-full border border-primary text-primary text-[11px] font-semibold hover:bg-primary hover:text-white transition-all">
+                            深入研读
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 -mt-4">
+            <div
+                class="flex flex-col items-stretch justify-start rounded-xl bg-white/50 dark:bg-stone-900/50 border border-stone-200 dark:border-stone-800 overflow-hidden">
+                <div class="w-full bg-center bg-no-repeat aspect-[16/7] bg-cover grayscale-[30%] opacity-90"
+                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCEsFloLal_osOpPlv71_uNH7kbXhaR0_TNVqUguvmQ59vAD1F_8EY6H78UB6fBWjDdKZEOEkuAyTn2wfStD3BaHkv7qPT3wbVM6kIbRWxO0bqPzu-dgRncyUr-kXwxDcY4ZEsXd3ZBZRIl223wPvV-uniSe7-tC52gCB4Em78b-lkWMXBlCp6XLjU1WnTw_QKoVMye6BXTfi0D8sBUGty-2GjEaZU8Xw2gicli-yPF6VxFtyHcw1qqm2IaAGmstveT3JFHQ3vn0Vtz");'>
+                </div>
+                <div class="flex flex-col p-5 gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-accent text-sm">ink_pen</span>
+                        <p class="text-stone-500 dark:text-stone-400 text-[10px] font-medium uppercase tracking-widest">
+                            《沉思录》· 马可·奥勒留</p>
+                    </div>
+                    <p class="text-stone-800 dark:text-stone-100 text-base font-serif font-bold leading-snug">论内在堡垒的构建
+                    </p>
+                    <p class="text-stone-600 dark:text-stone-400 text-sm leading-relaxed font-serif italic">
+                        “痛苦不来自于事物本身，而来自于你对事物的判断。你有权随时撤销这种判断，从而获得即刻的安宁。”</p>
+                    <div class="flex items-center justify-between mt-4">
+                        <span class="text-[9px] text-stone-400 tracking-tighter">AI 洞察 · 2小时前</span>
+                        <button
+                            class="px-4 py-1.5 rounded-full border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-400 text-[11px] font-semibold">
+                            存为金句
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="px-5 pt-6">
+            <h3 class="text-stone-800 dark:text-stone-100 text-lg font-serif font-bold">书摘与笔记</h3>
+        </div>
+        <div class="p-4">
+            <div
+                class="bg-white/40 dark:bg-stone-900/30 p-5 rounded-xl border border-stone-200 dark:border-stone-800 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-accent/30"></div>
+                <p class="text-stone-800 dark:text-stone-200 text-base font-serif leading-relaxed mb-4">
+                    “一个人只有在独处时才能成为自己。谁要是不爱独处，他就不爱自由；因为只有当一个人独处的时候，他才是自由的。”
+                </p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-5 h-5 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xs text-stone-400">bookmark</span>
+                        </div>
+                        <span
+                            class="text-[11px] font-medium text-stone-500 dark:text-stone-400 tracking-wide">《人生的智慧》</span>
+                    </div>
+                    <span class="material-symbols-outlined text-stone-400 text-sm">more_horiz</span>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 -mt-4">
+            <div
+                class="bg-white/40 dark:bg-stone-900/30 p-5 rounded-xl border border-stone-200 dark:border-stone-800 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-primary/30"></div>
+                <p class="text-stone-800 dark:text-stone-200 text-base font-serif leading-relaxed mb-4">
+                    “反脆弱性超越了韧性和强韧。强韧只是抵抗冲击并保持原状；而反脆弱性则从冲击中获益。”
+                </p>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-5 h-5 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-xs text-stone-400">bookmark</span>
+                        </div>
+                        <span
+                            class="text-[11px] font-medium text-stone-500 dark:text-stone-400 tracking-wide">《反脆弱》</span>
+                    </div>
+                    <span class="material-symbols-outlined text-stone-400 text-sm">more_horiz</span>
+                </div>
+            </div>
+        </div>
+        <div class="fixed bottom-8 right-8 flex flex-col items-center gap-4">
+            <button
+                class="w-14 h-14 bg-accent text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 transition-transform">
+                <span class="material-symbols-outlined text-2xl">edit_note</span>
+            </button>
+        </div>
+        <div class="h-24"></div>
+    </div>
+
+</body>
+
+</html>

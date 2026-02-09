@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>会意 - 懂书也懂你</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "xuan-paper": "#f7f3ed", // Warm cream/beige
+                        "earth-brown": "#5d544b", // Muted brown
+                        "earth-olive": "#7c7d67", // Muted olive
+                        "warm-gray": "#9e9a91", // Warm gray
+                        "ink": "#2c2c2c",
+                    },
+                    fontFamily: {
+                        "sans": ["Noto Sans SC", "system-ui", "sans-serif"],
+                        "serif": ["Noto Serif SC", "serif"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-xuan-paper text-earth-brown font-sans;
+                background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+                background-size: 20px 20px;
+            }
+            .serif-font {
+                @apply font-serif;
+            }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-30 bg-xuan-paper/90 backdrop-blur-md">
+        <div class="flex items-center px-6 py-6 justify-between">
+            <div class="flex flex-col">
+                <h1 class="text-2xl serif-font font-bold text-ink tracking-widest">会意</h1>
+                <p class="text-[10px] tracking-[0.2em] text-warm-gray uppercase mt-0.5">懂书也懂你</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button
+                    class="flex items-center justify-center text-earth-brown/70 hover:text-earth-brown transition-colors">
+                    <span class="material-symbols-outlined text-2xl">search</span>
+                </button>
+                <button
+                    class="flex items-center justify-center text-earth-brown/70 hover:text-earth-brown transition-colors">
+                    <span class="material-symbols-outlined text-2xl">settings</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="flex-1 px-6 pb-32">
+        <div class="pt-8 pb-10 flex justify-between items-end border-b border-earth-brown/10">
+            <div>
+                <h2 class="serif-font text-xl font-medium text-ink">正在阅读</h2>
+                <p class="text-xs text-warm-gray mt-1">记录你的阅读旅程</p>
+            </div>
+            <div class="text-[10px] tracking-widest text-warm-gray bg-white/50 px-2 py-1 rounded">
+                12 卷藏书
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-x-10 gap-y-12 mt-10">
+            <div class="flex flex-col gap-4">
+                <div class="relative group cursor-pointer">
+                    <div
+                        class="aspect-[3/4.2] rounded-sm shadow-[5px_5px_15px_rgba(0,0,0,0.08)] overflow-hidden bg-white">
+                        <div class="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-700 group-hover:scale-105"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDriIi2nWotBR3_3TpHSgMxj_zZsN7m_EH7fPQTiEoecLyqxGw97jfM51B2ytfW20x-wypKU8q9WN-6uXjTOsQlxYLDiRYtMkd895wXN3PilRDWGxdPasPm7jcz3XNVU1gtox5i0f0n-Cf8Dpb3-ScyMuyxZuG2_ULsLJTU8-zxXMd5z7I5SzuIGxWfiYQLxEGZ-um-IDp0Pr7RmBqQKpdEZEedcPwrhAAPKYW1cTyDstPz_NQunyIXNbbsN0V97Gf4JhUA8bJbICNX");'>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-2 left-0 right-0 px-2">
+                        <div class="h-[2px] bg-warm-gray/20 w-full overflow-hidden">
+                            <div class="h-full bg-earth-olive" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <h3 class="serif-font text-ink text-base font-medium leading-relaxed">平凡的世界</h3>
+                    <p class="text-[10px] text-warm-gray mt-1 tracking-wider">路遥 · 已读 45%</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-4">
+                <div class="relative group cursor-pointer">
+                    <div
+                        class="aspect-[3/4.2] rounded-sm shadow-[5px_5px_15px_rgba(0,0,0,0.08)] overflow-hidden bg-white">
+                        <div class="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-700 group-hover:scale-105"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA1TanG2vfOul5Tc5pYTyCk7OFHxM04fAtBT7g9iortCLUp4vA6jup5ZMunbiY2jKcDWYYsaWtHimE1iFpgbB7xV3HXbT71ZLMpubZLlndPo8Z_3aBBNegl0Qh7Z3TLLfkk3JEEvx1-bRYZgrnd3FmD9XJ-etK_EHnfeapr1w0FbT7CKTBM6b5OtpfD80hMXVn1ukRlUIithtgaI1Wo9cc78uW8Wwb7p9mx5OAhD1tKMO2c3ceQ-LeMnDeQuWBjfTbWLQEWAkkQrJGf");'>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-2 left-0 right-0 px-2">
+                        <div class="h-[2px] bg-warm-gray/20 w-full overflow-hidden">
+                            <div class="h-full bg-earth-olive" style="width: 12%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <h3 class="serif-font text-ink text-base font-medium leading-relaxed">三体</h3>
+                    <p class="text-[10px] text-warm-gray mt-1 tracking-wider">刘慈欣 · 已读 12%</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-4">
+                <div class="relative group cursor-pointer">
+                    <div
+                        class="aspect-[3/4.2] rounded-sm shadow-[5px_5px_15px_rgba(0,0,0,0.08)] overflow-hidden bg-white">
+                        <div class="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-700 group-hover:scale-105"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCnqbRTmVUolB9YWsUQ2AKDFhZt6Z_4WB-6MglM-Ab50k2faQ1jHyGwYoPFfk9AfCvj6B-1zJvQt_56ZX95uIcFfmCe82VLG-t_LaDeOFjOflnzcH6vXh50aKnmZsX6Wx3vuGHKx8AhypsteuaaGAjZBPaIhsNh-yEbGrVFXfUUkRAEW3DuZdmmnAXeC5fPoF9uxt4ogIEQgzCn5DIDLUyIaHeo-nc5Asbcc9CTppblxIGb8tFdlQsHjteVWznpx71IwulNEo4SNxTo");'>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-2 left-0 right-0 px-2">
+                        <div class="h-[2px] bg-warm-gray/20 w-full overflow-hidden">
+                            <div class="h-full bg-earth-olive" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <h3 class="serif-font text-ink text-base font-medium leading-relaxed">瓦尔登湖</h3>
+                    <p class="text-[10px] text-warm-gray mt-1 tracking-wider">梭罗 · 已读 88%</p>
+                </div>
+            </div>
+            <div class="flex flex-col gap-4">
+                <div class="relative group cursor-pointer">
+                    <div
+                        class="aspect-[3/4.2] rounded-sm shadow-[5px_5px_15px_rgba(0,0,0,0.08)] overflow-hidden bg-white">
+                        <div class="absolute inset-0 bg-center bg-no-repeat bg-cover transition-transform duration-700 group-hover:scale-105"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBeyUXTP4r1AF77INTA3EyM-2MIwFWY7Yn-PZxdBJdz454KA3aPfabCnNYYna34I_x1DSADHTxYX2gmabGzhQVkazMOGnQGResjP4bOf97n4Sw2L-6RM6M-95sJBynkfK7JoUuihetxybU-Yv049CUB1F3dq9EwZVYvP1RsLDrlUTrmiIFg5KXmAglBBGtdgc-ieur6rSqSqTigBczdPF2hSVjNh6oZLsYZb341rjFNNW8d3vhAgYOz8P2Nu_jo8kr-ImnCTjp_fDSM");'>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-2 left-0 right-0 px-2">
+                        <div class="h-[2px] bg-warm-gray/20 w-full overflow-hidden">
+                            <div class="h-full bg-earth-olive" style="width: 30%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <h3 class="serif-font text-ink text-base font-medium leading-relaxed">万历十五年</h3>
+                    <p class="text-[10px] text-warm-gray mt-1 tracking-wider">黄仁宇 · 已读 30%</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="fixed bottom-28 right-8 z-40">
+        <button
+            class="flex items-center justify-center rounded-full h-12 w-12 bg-white/40 border border-earth-brown/10 backdrop-blur-md text-earth-brown shadow-sm hover:bg-white/60 transition-all active:scale-90">
+            <span class="material-symbols-outlined text-2xl font-light">add</span>
+        </button>
+    </div>
+    <nav
+        class="fixed bottom-0 left-0 right-0 bg-xuan-paper/95 backdrop-blur-xl border-t border-earth-brown/5 pb-8 pt-3 z-50">
+        <div class="flex justify-around px-8">
+            <a class="flex flex-col items-center gap-1.5 text-ink" href="#">
+                <span class="material-symbols-outlined text-2xl"
+                    style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+                <p class="text-[10px] font-medium tracking-widest serif-font">书架</p>
+            </a>
+            <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors"
+                href="#">
+                <span class="material-symbols-outlined text-2xl">chat_bubble_outline</span>
+                <p class="text-[10px] font-medium tracking-widest serif-font">对话</p>
+            </a>
+            <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors"
+                href="#">
+                <span class="material-symbols-outlined text-2xl">diversity_3</span>
+                <p class="text-[10px] font-medium tracking-widest serif-font">书友</p>
+            </a>
+            <a class="flex flex-col items-center gap-1.5 text-warm-gray hover:text-earth-brown transition-colors"
+                href="#">
+                <span class="material-symbols-outlined text-2xl">face_6</span>
+                <p class="text-[10px] font-medium tracking-widest serif-font">我的</p>
+            </a>
+        </div>
+    </nav>
+
+</body>
+
+</html>

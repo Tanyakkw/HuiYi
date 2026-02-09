@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <script src="/static/tailwind.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Zhi+Mang+Xing&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Zhi+Mang+Xing&display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet" />
+    </noscript>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "parchment": "#f4f1ea",
+                        "xuan-paper": "#F9F5F0",
+                        "ink": "#2C2C2C",
+                        "soft-gold": "#e2d1a6",
+                        "olive-light": "#d8e1c6",
+                        "huiyi-brown": "#7c6b5a"
+                    },
+                    fontFamily: {
+                        "serif": ["Noto Serif SC", "serif"],
+                        "handwriting": ["Zhi Mang+Xing", "cursive"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-xuan-paper text-ink font-serif;
+                background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-w6uI8vt4HjjnAUJptO7iMZfeKeKZ7ATnOvSgqiAGokMdFVLvWfZidysg7a4Z45gUR4mWTZzqf5B7HgPrNoykPTo2JS8MW2YbblrN3PRa4ln7zjQDesIAxMGqSMi6NeA8uTPPspyleLkLMdyRaAgqyOAkLC0Ypqn-_4vm54DUYfdp4S0fT9jZUTEmRIYpibDqwodVtrL8BEW9ZjPJDGS7Q7CZmFff2l4sFxwsXwPUDV8Xq5i-8wtB6MOVyFG_pTau03Xg49d2K_2);
+            }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-blur {
+            backdrop-filter: blur(8px);
+        }
+        .ai-bubble-gradient {
+            background: linear-gradient(135deg, rgba(226, 209, 166, 0.4), rgba(216, 225, 198, 0.4));
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <header
+            class="sticky top-0 z-30 flex items-center bg-xuan-paper/80 backdrop-blur-sm px-4 py-3 justify-between border-b border-black/5 transition-colors duration-300"
+            id="reader-header">
+            <div class="flex items-center gap-1">
+                <a href="/bookshelf" class="flex items-center text-huiyi-brown cursor-pointer">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                    <span class="text-xs font-medium">书架</span>
+                </a>
+            </div>
+            <div class="flex flex-col items-center">
+                <h2 class="text-ink text-sm font-bold tracking-widest" id="header-title">正在加载...</h2>
+                <p class="text-[10px] text-huiyi-brown/60 uppercase tracking-tighter" id="header-author">...</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSettings()" class="flex items-center justify-center">
+                    <span class="material-symbols-outlined text-huiyi-brown">settings_brightness</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Context Menu (Floating) -->
+        <div id="selection-menu"
+            class="fixed hidden z-50 bg-[#2C2C2C] text-white rounded-lg shadow-xl px-2 py-1 flex items-center gap-1 transform -translate-x-1/2 transition-all">
+            <button onclick="handleHighlight()"
+                class="p-2 hover:bg-white/10 rounded flex flex-col items-center gap-0.5">
+                <span class="material-symbols-outlined text-lg text-white">border_color</span>
+                <span class="text-[9px] text-white">划线</span>
+            </button>
+            <div class="w-[1px] h-6 bg-white/20"></div>
+            <button onclick="handleHighlightWithComment()"
+                class="p-2 hover:bg-white/10 rounded flex flex-col items-center gap-0.5">
+                <span class="material-symbols-outlined text-lg text-white">comment</span>
+                <span class="text-[9px] text-white">评论</span>
+            </button>
+            <div class="w-[1px] h-6 bg-white/20"></div>
+            <button onclick="handleAskAI()" class="p-2 hover:bg-white/10 rounded flex flex-col items-center gap-0.5">
+                <span class="material-symbols-outlined text-lg text-white">auto_awesome</span>
+                <span class="text-[9px] text-white">问会意</span>
+            </button>
+        </div>
+
+        <!-- Comment Modal -->
+        <div id="comment-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
+                <div class="p-4 border-b border-black/10">
+                    <h3 class="font-bold text-ink-dark">添加评论</h3>
+                    <p id="comment-quote" class="text-xs text-warm-gray mt-1 line-clamp-2 italic">"选中的文字"</p>
+                </div>
+                <div class="p-4">
+                    <textarea id="comment-input" rows="3" placeholder="写下你的想法..."
+                        class="w-full border border-gray-200 rounded-lg p-3 text-sm resize-none focus:outline-none focus:border-warm-red"></textarea>
+                </div>
+                <div class="p-4 pt-0 flex gap-2">
+                    <button onclick="closeCommentModal()"
+                        class="flex-1 py-2 border border-gray-200 rounded-full text-sm">取消</button>
+                    <button onclick="saveComment()"
+                        class="flex-1 py-2 bg-ink-dark text-white rounded-full text-sm">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel"
+            class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#1a1a1a] p-6 rounded-t-2xl shadow-[0_-5px_20px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform z-50">
+            <div class="space-y-6 max-w-md mx-auto">
+                <!-- Theme -->
+                <div>
+                    <p class="text-xs text-gray-500 mb-2">阅读背景</p>
+                    <div class="flex gap-3">
+                        <button onclick="setTheme('default')"
+                            class="w-10 h-10 rounded-full border-2 border-transparent hover:scale-110 transition bg-[#F9F5F0]"
+                            title="羊皮纸"></button>
+                        <button onclick="setTheme('green')"
+                            class="w-10 h-10 rounded-full border-2 border-transparent hover:scale-110 transition bg-[#C7EDCC]"
+                            title="护眼绿"></button>
+                        <button onclick="setTheme('dark')"
+                            class="w-10 h-10 rounded-full border-2 border-transparent hover:scale-110 transition bg-[#1a1a1a]"
+                            title="夜间"></button>
+                    </div>
+                </div>
+                <!-- Font Size -->
+                <div>
+                    <p class="text-xs text-gray-500 mb-2">字号大小</p>
+                    <div class="flex items-center gap-4">
+                        <span class="material-symbols-outlined text-sm">format_size</span>
+                        <input type="range" min="14" max="24" value="18"
+                            class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                            oninput="setFontSize(this.value)">
+                        <span class="material-symbols-outlined text-lg">format_size</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <main class="flex-1 px-8 pt-10 pb-32 max-w-2xl mx-auto" id="reader-content">
+            <div class="flex flex-col items-center justify-center py-20 animate-pulse">
+                <span class="material-symbols-outlined text-4xl text-huiyi-brown/50 mb-2">menu_book</span>
+                <p class="serif-font text-huiyi-brown/50 text-sm">正在翻开书页...</p>
+            </div>
+        </main>
+        <div class="fixed bottom-24 right-6 z-40">
+            <button
+                class="ai-bubble-gradient w-14 h-14 rounded-full flex items-center justify-center shadow-lg border border-white/50 group overflow-hidden">
+                <div class="absolute inset-0 bg-white/10 opacity-0 group-active:opacity-100 transition-opacity"></div>
+                <div class="flex flex-col items-center">
+                    <span
+                        class="material-symbols-outlined text-huiyi-brown text-3xl font-light">temp_preferences_custom</span>
+                </div>
+            </button>
+        </div>
+        <!-- TOC Sidebar -->
+        <div id="toc-sidebar"
+            class="fixed left-0 top-0 bottom-0 w-72 bg-white/95 backdrop-blur-md shadow-xl z-40 transform -translate-x-full transition-transform duration-300 overflow-y-auto">
+            <div class="sticky top-0 bg-white/90 backdrop-blur-sm p-4 border-b border-black/5">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-ink">目录</h3>
+                    <button onclick="toggleTOC()" class="text-huiyi-brown">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+            <div id="toc-list" class="p-4 space-y-2">
+                <p class="text-huiyi-brown/50 text-sm">加载中...</p>
+            </div>
+        </div>
+
+        <!-- Brightness Overlay -->
+        <div id="brightness-overlay"
+            class="fixed inset-0 pointer-events-none z-20 bg-black transition-opacity duration-300" style="opacity: 0;">
+        </div>
+
+        <!-- Brightness Panel -->
+        <div id="brightness-panel"
+            class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-4 z-50 hidden w-80">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-huiyi-brown">dark_mode</span>
+                <input type="range" id="brightness-slider" min="0" max="50" value="0"
+                    class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <span class="material-symbols-outlined text-huiyi-brown">light_mode</span>
+            </div>
+            <p class="text-center text-xs text-huiyi-brown/60 mt-2">拖动调节屏幕亮度</p>
+        </div>
+
+        <!-- AI Chat Overlay (Small Screen) -->
+        <div id="ai-chat-overlay"
+            class="fixed bottom-0 left-0 right-0 bg-white/98 backdrop-blur-xl rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.15)] z-50 transform translate-y-full transition-transform duration-300"
+            style="max-height: 60vh;">
+            <div class="p-4 border-b border-black/5">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-soft-gold">auto_awesome</span>
+                        <span class="font-bold text-ink">问会意</span>
+                    </div>
+                    <button onclick="closeAIOverlay()" class="text-huiyi-brown">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div id="ai-overlay-context"
+                    class="mt-2 p-3 bg-soft-gold/20 rounded-lg text-sm text-ink/80 max-h-20 overflow-y-auto">
+                    选中的文字...
+                </div>
+            </div>
+            <div id="ai-overlay-messages" class="p-4 space-y-3 overflow-y-auto" style="max-height: 35vh;">
+                <!-- AI messages here -->
+            </div>
+            <div class="p-4 border-t border-black/5 flex gap-2">
+                <input id="ai-overlay-input" type="text" placeholder="关于这段文字，你想问什么？"
+                    class="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-soft-gold">
+                <button onclick="sendAIOverlayMessage()" class="px-4 py-2 bg-ink text-white rounded-full text-sm">
+                    发送
+                </button>
+            </div>
+        </div>
+
+        <nav
+            class="fixed bottom-0 left-0 right-0 z-30 bg-xuan-paper/60 backdrop-blur-xl border-t border-black/5 pb-8 pt-4 px-10">
+            <div class="flex justify-between items-center max-w-md mx-auto">
+                <button onclick="toggleTOC()"
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                    <span class="text-[10px] font-medium tracking-tight">目录</span>
+                </button>
+                <button onclick="toggleBrightness()"
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">settings_brightness</span>
+                    <span class="text-[10px] font-medium tracking-tight">亮度</span>
+                </button>
+                <button onclick="toggleSettings()"
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">text_format</span>
+                    <span class="text-[10px] font-medium tracking-tight">排版</span>
+                </button>
+                <button
+                    class="flex flex-col items-center gap-1 text-huiyi-brown/60 hover:text-huiyi-brown transition-colors">
+                    <span class="material-symbols-outlined">bookmark_border</span>
+                    <span class="text-[10px] font-medium tracking-tight">书签</span>
+                </button>
+            </div>
+            <!-- Page Indicator -->
+            <div id="page-indicator" class="text-center text-[10px] text-huiyi-brown/50 mt-2">
+                第 <span id="current-page">1</span> / <span id="total-pages">1</span> 页
+            </div>
+            <div
+                class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[9px] text-huiyi-brown/30 font-serif tracking-[0.3em]">
+                会意 · 懂书也懂你
+            </div>
+        </nav>
+
+        <!-- Page Turn Areas (invisible touch targets) -->
+        <div id="prev-page-area" onclick="prevPage()" class="fixed left-0 top-16 bottom-32 w-1/4 z-20 cursor-pointer">
+        </div>
+        <div id="next-page-area" onclick="nextPage()" class="fixed right-0 top-16 bottom-32 w-1/4 z-20 cursor-pointer">
+        </div>
+    </div>
+
+    <script>
+        // Check params
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('book_id');
+
+        if (!bookId) {
+            alert('未指定书籍');
+            window.location.href = '/bookshelf';
+        }
+
+        async function initReader() {
+            try {
+                const res = await fetch(`/api/book_content?book_id=${bookId}`);
+                if (!res.ok) throw new Error("Load failed");
+                const data = await res.json();
+
+                // Update Header
+                document.getElementById('header-title').innerText = data.title;
+                document.getElementById('header-author').innerText = data.author || '佚名';
+                document.title = data.title + " - 会意阅读";
+
+                // Process Content
+                // Simple generic processing: preserve paragraphs
+                const rawContent = data.content || "这里什么也没有...";
+                const paragraphs = rawContent.split('\n').filter(line => line.trim() !== '');
+
+                // Store paragraphs for pagination
+                window.allParagraphs = paragraphs;
+                window.currentPageNum = 1;
+                window.paragraphsPerPage = 8; // Adjustable
+                window.totalPages = Math.ceil(paragraphs.length / window.paragraphsPerPage);
+
+                // Render first page
+                renderPage(1, data.title, data.author);
+
+                // Save context for AI chat
+                localStorage.setItem('current_book_id', bookId);
+                localStorage.setItem('current_book_title', data.title);
+                // We don't save full content to localstorage (too big), 
+                // but we'll fetch it again or keep in memory if we open chat
+                window.currentBookContent = rawContent;
+                window.currentBookTitle = data.title;
+                window.currentBookAuthor = data.author;
+
+                // Build Table of Contents
+                buildTOC(rawContent);
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('reader-content').innerHTML = `
+                    <div class="text-center py-20 text-warm-red">
+                        <p>加载失败</p>
+                        <button onclick="location.reload()" class="mt-4 px-4 py-2 border border-warm-red rounded-full text-xs">重试</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Chat Fab Handler
+        document.querySelector('.ai-bubble-gradient').onclick = () => {
+            // Pass context to chat via localStorage or URL
+            // Since content is large, we might only pass the ID and let backend handle context?
+            // But backend implementation of 'handle_chat' expects 'book_context' in body potentially.
+            // Let's modify the button to jump to chat with book ID
+            window.location.href = `/chat?book_id=${bookId}`;
+        };
+
+        // Initialize
+        initReader();
+
+        // --- Reader V2 Enhancements ---
+
+        // Settings Logic
+        const settingsPanel = document.getElementById('settings-panel');
+        const contentArea = document.getElementById('reader-content');
+        const header = document.getElementById('reader-header');
+
+        function toggleSettings() {
+            settingsPanel.classList.toggle('translate-y-full');
+        }
+
+        // Close settings when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!settingsPanel.contains(e.target) && !e.target.closest('button[onclick="toggleSettings()"]')) {
+                settingsPanel.classList.add('translate-y-full');
+            }
+        });
+
+        function setTheme(theme) {
+            // Get all elements that need theme update
+            const content = document.getElementById('reader-content');
+            const nav = document.querySelector('nav');
+            const tocSidebar = document.getElementById('toc-sidebar');
+            const settingsPanel = document.getElementById('settings-panel');
+
+            // Remove existing theme classes from all elements
+            const themeClasses = ['bg-xuan-paper', 'bg-[#C7EDCC]', 'bg-[#1a1a1a]', 'text-ink', 'text-[#2C2C2C]', 'text-[#e5e5e5]'];
+            [document.body, content, nav].forEach(el => {
+                if (el) themeClasses.forEach(c => el.classList.remove(c));
+            });
+
+            if (theme === 'default') {
+                document.body.classList.add('bg-xuan-paper', 'text-ink');
+                if (content) content.classList.add('bg-xuan-paper');
+                if (nav) nav.classList.add('bg-xuan-paper/60');
+                header.className = 'sticky top-0 z-30 flex items-center px-4 py-3 justify-between border-b transition-colors duration-300 bg-xuan-paper/80 backdrop-blur-sm border-black/5';
+            } else if (theme === 'green') {
+                document.body.classList.add('bg-[#C7EDCC]', 'text-[#2C2C2C]');
+                if (content) content.classList.add('bg-[#C7EDCC]');
+                if (nav) nav.classList.add('bg-[#C7EDCC]/60');
+                header.className = 'sticky top-0 z-30 flex items-center px-4 py-3 justify-between border-b transition-colors duration-300 bg-[#C7EDCC]/90 border-[#2C2C2C]/5';
+            } else if (theme === 'dark') {
+                document.body.classList.add('bg-[#1a1a1a]', 'text-[#e5e5e5]');
+                if (content) content.classList.add('bg-[#1a1a1a]');
+                if (nav) nav.classList.add('bg-[#1a1a1a]/60');
+                header.className = 'sticky top-0 z-30 flex items-center px-4 py-3 justify-between border-b transition-colors duration-300 bg-[#1a1a1a]/90 border-[#ffffff]/10';
+            }
+
+            // Save pref
+            localStorage.setItem('reader_theme', theme);
+        }
+
+        function setFontSize(size) {
+            const content = document.getElementById('reader-content');
+            if (content) content.style.fontSize = size + 'px';
+            localStorage.setItem('reader_fontsize', size);
+
+            // Update slider visual
+            const slider = document.querySelector('input[type="range"][oninput*="setFontSize"]');
+            if (slider) slider.value = size;
+        }
+
+        // Load Preferences
+        const savedTheme = localStorage.getItem('reader_theme');
+        if (savedTheme) setTheme(savedTheme);
+        const savedSize = localStorage.getItem('reader_fontsize');
+        if (savedSize) {
+            setFontSize(savedSize);
+        }
+
+
+        // Selection Logic (Context Menu)
+        const menu = document.getElementById('selection-menu');
+
+        document.addEventListener('selectionchange', () => {
+            const selection = window.getSelection();
+            if (selection.toString().trim().length > 0) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+
+                // Position menu above selection
+                menu.style.top = `${rect.top - 60}px`;
+                menu.style.left = `${rect.left + rect.width / 2}px`;
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Prevent menu from closing immediately on click inside it
+        menu.addEventListener('mousedown', (e) => e.preventDefault());
+
+        function handleHighlight() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+
+            // Simple highlight: wrap in span (Not persisted in this demo version)
+            const range = selection.getRangeAt(0);
+            const span = document.createElement('span');
+            span.className = "bg-yellow-200/50 dark:bg-yellow-600/30 border-b-2 border-yellow-400";
+            try {
+                range.surroundContents(span);
+                selection.removeAllRanges(); // Clear selection
+                menu.classList.add('hidden');
+            } catch (e) {
+                alert("无法跨段落划线，请分段选择。");
+            }
+        }
+
+        // Comment Modal Handlers
+        let pendingCommentText = '';
+        let pendingCommentRange = null;
+
+        function handleHighlightWithComment() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+
+            pendingCommentText = selection.toString();
+            pendingCommentRange = selection.getRangeAt(0).cloneRange();
+
+            document.getElementById('comment-quote').innerText = `"${pendingCommentText.substring(0, 60)}${pendingCommentText.length > 60 ? '...' : ''}"`;
+            document.getElementById('comment-input').value = '';
+            document.getElementById('comment-modal').classList.remove('hidden');
+            menu.classList.add('hidden');
+        }
+
+        function closeCommentModal() {
+            document.getElementById('comment-modal').classList.add('hidden');
+            pendingCommentText = '';
+            pendingCommentRange = null;
+        }
+
+        function saveComment() {
+            const comment = document.getElementById('comment-input').value.trim();
+            if (!pendingCommentRange) return;
+
+            try {
+                const span = document.createElement('span');
+                span.className = "bg-yellow-200/50 border-b-2 border-yellow-400 cursor-pointer relative group";
+                span.title = comment || '无评论';
+                span.dataset.comment = comment;
+
+                // Add comment indicator
+                if (comment) {
+                    span.innerHTML = `${pendingCommentText}<sup class="text-warm-red text-[10px] ml-0.5">💬</sup>`;
+                } else {
+                    pendingCommentRange.surroundContents(span);
+                }
+
+                // If we have a comment, replace range content
+                if (comment) {
+                    pendingCommentRange.deleteContents();
+                    pendingCommentRange.insertNode(span);
+                }
+
+                // Click to view comment
+                span.onclick = function () {
+                    if (this.dataset.comment) {
+                        alert('💬 我的评论：\n' + this.dataset.comment);
+                    }
+                };
+            } catch (e) {
+                console.error('Comment error:', e);
+            }
+
+            closeCommentModal();
+            window.getSelection().removeAllRanges();
+        }
+
+        function handleAskAI() {
+            const selection = window.getSelection().toString();
+            if (!selection) return;
+
+            // Show AI overlay instead of redirecting
+            const overlay = document.getElementById('ai-chat-overlay');
+            document.getElementById('ai-overlay-context').innerText = selection;
+            document.getElementById('ai-overlay-messages').innerHTML = '';
+            overlay.classList.remove('translate-y-full');
+            window.currentAIContext = selection;
+
+            // Hide selection menu
+            menu.classList.add('hidden');
+        }
+
+        function closeAIOverlay() {
+            document.getElementById('ai-chat-overlay').classList.add('translate-y-full');
+        }
+
+        let aiOverlayProcessing = false;
+        async function sendAIOverlayMessage() {
+            if (aiOverlayProcessing) return;
+
+            const input = document.getElementById('ai-overlay-input');
+            const userQuestion = input.value.trim();
+            if (!userQuestion) return;
+
+            input.value = '';
+            const messagesDiv = document.getElementById('ai-overlay-messages');
+
+            // Show user message
+            messagesDiv.innerHTML += `
+                <div class="flex justify-end">
+                    <div class="bg-ink text-white px-3 py-2 rounded-xl max-w-[80%] text-sm">${userQuestion}</div>
+                </div>
+            `;
+
+            // Show loading
+            messagesDiv.innerHTML += `
+                <div id="ai-loading" class="flex justify-start">
+                    <div class="bg-soft-gold/30 text-ink/80 px-3 py-2 rounded-xl text-sm flex items-center gap-2">
+                        <span class="animate-spin">⏳</span> 会意思考中...
+                    </div>
+                </div>
+            `;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            aiOverlayProcessing = true;
+
+            try {
+                const context = window.currentAIContext || '';
+                const bookTitle = document.getElementById('header-title').innerText;
+                const fullPrompt = `(读者正在阅读《${bookTitle}》，划线了以下段落：)\n"${context}"\n\n读者问：${userQuestion}`;
+
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: fullPrompt,
+                        user_id: localStorage.getItem('user_id'),
+                        book_context: window.currentBookContent?.substring(0, 5000) || ''
+                    })
+                });
+
+                document.getElementById('ai-loading')?.remove();
+
+                if (res.ok) {
+                    const data = await res.json();
+                    messagesDiv.innerHTML += `
+                        <div class="flex justify-start">
+                            <div class="bg-soft-gold/30 text-ink/80 px-3 py-2 rounded-xl max-w-[90%] text-sm leading-relaxed">${data.response}</div>
+                        </div>
+                    `;
+                } else {
+                    messagesDiv.innerHTML += `<div class="text-center text-red-500 text-xs">回复失败</div>`;
+                }
+            } catch (e) {
+                document.getElementById('ai-loading')?.remove();
+                messagesDiv.innerHTML += `<div class="text-center text-red-500 text-xs">网络错误</div>`;
+            } finally {
+                aiOverlayProcessing = false;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+        }
+
+        // Enter key for AI overlay
+        document.getElementById('ai-overlay-input')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendAIOverlayMessage();
+        });
+
+        // TOC Functions
+        function toggleTOC() {
+            const sidebar = document.getElementById('toc-sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        function buildTOC(content) {
+            // Auto-generate TOC from chapter patterns
+            const tocList = document.getElementById('toc-list');
+            const chapters = [];
+
+            // Common patterns: 第X章, 第X回, Chapter X
+            const patterns = [
+                /^(第[一二三四五六七八九十百千\d]+[章回节篇].*)/gm,
+                /^(Chapter\s+\d+.*)/gmi,
+                /^(\d+[\.、].+)/gm
+            ];
+
+            let found = false;
+            for (const pattern of patterns) {
+                const matches = content.match(pattern);
+                if (matches && matches.length > 0) {
+                    matches.slice(0, 50).forEach((title, i) => {
+                        chapters.push({ title: title.trim().substring(0, 30), index: i });
+                    });
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found && chapters.length > 0) {
+                tocList.innerHTML = chapters.map(ch => `
+                    <button class="w-full text-left px-3 py-2 hover:bg-soft-gold/20 rounded-lg text-sm text-ink/80 truncate">
+                        ${ch.title}
+                    </button>
+                `).join('');
+            } else {
+                tocList.innerHTML = '<p class="text-huiyi-brown/50 text-sm">暂无章节信息</p>';
+            }
+        }
+
+        // Brightness Functions
+        function toggleBrightness() {
+            const panel = document.getElementById('brightness-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        document.getElementById('brightness-slider')?.addEventListener('input', (e) => {
+            const value = e.target.value;
+            document.getElementById('brightness-overlay').style.opacity = value / 100;
+            localStorage.setItem('reader_brightness', value);
+        });
+
+        // Load saved brightness
+        const savedBrightness = localStorage.getItem('reader_brightness');
+        if (savedBrightness) {
+            document.getElementById('brightness-slider').value = savedBrightness;
+            document.getElementById('brightness-overlay').style.opacity = savedBrightness / 100;
+        }
+
+        // Pagination Functions
+        function renderPage(pageNum, title, author) {
+            const start = (pageNum - 1) * window.paragraphsPerPage;
+            const end = start + window.paragraphsPerPage;
+            const pageParagraphs = window.allParagraphs.slice(start, end);
+
+            const isFirstPage = pageNum === 1;
+
+            const htmlContent = `
+                ${isFirstPage ? `
+                    <header class="mb-8 text-center">
+                        <h1 class="text-2xl font-bold text-ink">${title || window.currentBookTitle}</h1>
+                        <p class="text-huiyi-brown/40 text-xs tracking-[0.2em] mt-2">${author || window.currentBookAuthor || ''}</p>
+                    </header>
+                ` : ''}
+                <div class="space-y-5 text-base leading-[2.0] text-ink/90 text-justify tracking-wide">
+                    ${pageParagraphs.map(p => `<p class="indent-8">${p}</p>`).join('')}
+                </div>
+            `;
+
+            document.getElementById('reader-content').innerHTML = htmlContent;
+            document.getElementById('current-page').innerText = pageNum;
+            document.getElementById('total-pages').innerText = window.totalPages;
+            window.currentPageNum = pageNum;
+
+            // Save reading progress
+            const progress = Math.round((pageNum / window.totalPages) * 100);
+            localStorage.setItem(`book_progress_${window.location.search}`, JSON.stringify({ page: pageNum, progress }));
+
+            // Scroll to top of content
+            document.getElementById('reader-content').scrollTop = 0;
+            window.scrollTo(0, 0);
+        }
+
+        function nextPage() {
+            if (window.currentPageNum < window.totalPages) {
+                renderPage(window.currentPageNum + 1);
+            }
+        }
+
+        function prevPage() {
+            if (window.currentPageNum > 1) {
+                renderPage(window.currentPageNum - 1);
+            }
+        }
+
+        // Swipe gesture support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left -> next page
+                    nextPage();
+                } else {
+                    // Swipe right -> prev page
+                    prevPage();
+                }
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
+    </script>
+    </div>
+
+</body>
+
+</html>

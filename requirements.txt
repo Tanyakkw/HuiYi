@@ -1,0 +1,6 @@
+# No external dependencies - using Python standard library only
+# This project uses:
+# - http.server (built-in)
+# - sqlite3 (built-in)
+# - json (built-in)
+# - urllib (built-in)
