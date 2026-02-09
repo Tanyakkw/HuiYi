@@ -18,7 +18,7 @@ PORT = int(os.environ.get("PORT", 8000))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "mybook.db")
 BOOKS_DIR = os.path.join(BASE_DIR, "static", "books")
-GEMINI_API_KEY = "AIzaSyABxytI-RrsGtVydOxhisaobG_gSQDYgcw"
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")  # Set in Railway environment variables
 
 # Ensure directories exist
 os.makedirs(BOOKS_DIR, exist_ok=True)
