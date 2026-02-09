@@ -468,7 +468,11 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         self.send_json_response(200, {"response": ai_response})
 
     def call_gemini(self, prompt, system_instruction):
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+        # Check if API key is configured
+        if not GEMINI_API_KEY:
+            return "AI服务未配置。请在Railway环境变量中设置 GEMINI_API_KEY。"
+        
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
         headers = {'Content-Type': 'application/json'}
         
         payload = {
@@ -479,13 +483,23 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
 
         try:
             req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-            with urllib.request.urlopen(req, timeout=20) as response:
+            with urllib.request.urlopen(req, timeout=30) as response:
                 result = json.loads(response.read().decode('utf-8'))
                 try:
                     return result['candidates'][0]['content']['parts'][0]['text']
                 except:
                     return "我似乎走神了（API返回异常）"
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode('utf-8') if e.fp else ""
+            print(f"Gemini API Error: {e.code} - {error_body}")
+            if e.code == 403:
+                return "AI密钥无效或已过期。请在Railway中更新 GEMINI_API_KEY。"
+            elif e.code == 429:
+                return "请求太频繁，请稍后再试。"
+            else:
+                return f"AI服务异常 (错误码: {e.code})"
         except Exception as e:
+            print(f"Gemini Connection Error: {str(e)}")
             return f"连接中断: {str(e)}"
 
     def send_json_response(self, status_code, data):
