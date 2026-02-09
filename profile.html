@@ -138,7 +138,7 @@
               </button>
               <div class="w-px h-8 bg-gray-200"></div>
               <div class="text-center">
-                <p class="text-ink-dark text-lg font-bold">142</p>
+                <p class="text-ink-dark text-lg font-bold" id="read-count">0</p>
                 <p class="text-warm-gray text-[10px]">已读</p>
               </div>
             </div>
@@ -276,8 +276,8 @@
               <p class="font-bold text-ink-dark">红楼梦讨论群</p>
               <p class="text-xs text-warm-gray">328 位书友 · 今日 42 条新消息</p>
             </div>
-            <button onclick="joinGroup(this, '红楼梦')"
-              class="px-3 py-1 bg-red-500 text-white text-xs rounded-full font-medium hover:bg-red-600 transition-colors">加入</button>
+            <button onclick="enterGroupChat('group_red', '红楼梦讨论群')"
+              class="px-3 py-1 bg-white text-red-500 border border-red-200 text-xs rounded-full font-medium hover:bg-red-50 transition-colors">进入群聊</button>
           </div>
           <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
             <div
@@ -287,8 +287,8 @@
               <p class="font-bold text-ink-dark">西游记研读会</p>
               <p class="text-xs text-warm-gray">156 位书友 · 今日 18 条新消息</p>
             </div>
-            <button onclick="joinGroup(this, '西游记')"
-              class="px-3 py-1 bg-blue-500 text-white text-xs rounded-full font-medium hover:bg-blue-600 transition-colors">加入</button>
+            <button onclick="enterGroupChat('group_west', '西游记研读会')"
+              class="px-3 py-1 bg-white text-blue-500 border border-blue-200 text-xs rounded-full font-medium hover:bg-blue-50 transition-colors">进入群聊</button>
           </div>
           <div class="flex items-center gap-3 p-3 bg-green-50 rounded-xl border border-green-100">
             <div
@@ -298,8 +298,8 @@
               <p class="font-bold text-ink-dark">三国演义爱好者</p>
               <p class="text-xs text-warm-gray">243 位书友 · 今日 31 条新消息</p>
             </div>
-            <button onclick="joinGroup(this, '三国演义')"
-              class="px-3 py-1 bg-green-500 text-white text-xs rounded-full font-medium hover:bg-green-600 transition-colors">加入</button>
+            <button onclick="enterGroupChat('group_3kingdoms', '三国演义爱好者')"
+              class="px-3 py-1 bg-white text-green-500 border border-green-200 text-xs rounded-full font-medium hover:bg-green-50 transition-colors">进入群聊</button>
           </div>
           <div class="flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-100">
             <div
@@ -634,7 +634,7 @@
             <p class="font-bold text-ink-dark text-sm">${f.name}</p>
             <p class="text-xs text-warm-gray">${f.sig}</p>
           </div>
-          <button class="px-3 py-1 bg-warm-red/10 text-warm-red text-xs rounded-full font-medium">回关</button>
+          <button onclick="toggleFollow(this)" class="px-3 py-1 bg-warm-red/10 text-warm-red text-xs rounded-full font-medium">回关</button>
         </div>
       `).join('');
     }
@@ -668,7 +668,7 @@
             <p class="font-bold text-ink-dark text-sm">${f.name}</p>
             <p class="text-xs text-warm-gray">${f.sig}</p>
           </div>
-          <button class="px-3 py-1 border border-gray-300 text-gray-500 text-xs rounded-full font-medium">已关注</button>
+          <button onclick="toggleFollow(this)" class="px-3 py-1 border border-gray-300 text-gray-500 text-xs rounded-full font-medium">已关注</button>
         </div>
       `).join('');
     }
@@ -676,6 +676,89 @@
     // Initialize
     loadProfile();
     loadBooks();
+  </script>
+  <script>
+    // --- Stats & Profile Data ---
+    async function loadProfileData() {
+      const userId = localStorage.getItem('user_id');
+      if (!userId) return;
+
+      // 1. Fetch from Backend
+      try {
+        const res = await fetch('/api/user_profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: userId })
+        });
+        if (res.ok) {
+          const data = await res.json();
+
+          // Update Book Count (Read Count)
+          const readCountEl = document.getElementById('read-count');
+          if (readCountEl) {
+            readCountEl.innerText = data.book_count || 0;
+          }
+
+          // We could also update "reading days" if we had a place for it.
+          // For now, let's just log it or maybe update signature if empty?
+          // document.getElementById('profile-signature').innerText += ` · 书龄 ${data.reading_days} 天`;
+        }
+      } catch (e) {
+        console.error("Failed to load profile", e);
+      }
+    }
+
+    // --- Social Functions ---
+    // Modified to be attached to buttons in modal
+    // Note: The modal buttons are generated dynamically in loadFollowers/loadFollowing
+    // We need to ensure those generated buttons call this.
+    // In current profile.html, they are hardcoded in the JS strings:
+    // <button class="...">回关</button> 
+    // We need to update those strings in the existing script too, OR just delegate event?
+    // Let's overwrtie the existing loadFollowers/loadFollowing functions to include onclick attributes.
+
+    // But since I am appending this script, I can overwrite the functions if I define them after?
+    // No, var/function hoisting.
+
+    // Actually, I should just modify the text of buttons to have onclick="toggleFollow(this)"
+    // but I can't easily modify the *existing* script block above without replacing it.
+
+    // Strategy: I will replace the existing script block content for loadFollowers/Following
+    // in a separate step if needed. 
+    // For now, let's just add the group chat redirect.
+
+    function enterGroupChat(groupId, groupName) {
+      // Encode group name for title
+      window.location.href = `/chat?group_id=${groupId}&title=${encodeURIComponent(groupName)}`;
+    }
+
+    // Call loadProfileData on init
+    loadProfileData();
+
+    // Setup global toggleFollow for dynamic content
+    window.toggleFollow = function (btn) {
+      const isFollowing = btn.classList.contains('bg-warm-red/10') || btn.innerText === '回关' || btn.innerText === '关注';
+      // The styles in modal are different. 
+      // "回关": bg-warm-red/10 text-warm-red
+      // "已关注": border border-gray-300 text-gray-500
+
+      if (isFollowing) {
+        // Become "Following" / "Friend"
+        btn.className = "px-3 py-1 border border-gray-300 text-gray-500 text-xs rounded-full font-medium transition-all";
+        btn.innerText = "互相关注";
+
+        // Hacky stats update
+        const countEl = document.getElementById('following-count');
+        if (countEl) countEl.innerText = parseInt(countEl.innerText) + 1;
+      } else {
+        // Unfollow
+        btn.className = "px-3 py-1 bg-warm-red/10 text-warm-red text-xs rounded-full font-medium transition-all";
+        btn.innerText = "关注";
+        const countEl = document.getElementById('following-count');
+        if (countEl) countEl.innerText = Math.max(0, parseInt(countEl.innerText) - 1);
+      }
+    };
+
   </script>
 </body>
 

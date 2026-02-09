@@ -196,6 +196,8 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.handle_upload(data)
             elif self.path == '/api/update_current_book':
                 self.handle_update_current_book(data)
+            elif self.path == '/api/user_profile':
+                self.handle_get_user_profile(data)
             else:
                 self.send_error(404, "API not found")
         except Exception as e:
@@ -471,6 +473,40 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         else:
             self.send_json_response(404, {"error": "User not found"})
         conn.close()
+
+    def handle_get_user_profile(self, data):
+        user_id = data.get('user_id')
+        if not user_id:
+            self.send_json_response(400, {"error": "Missing user_id"})
+            return
+
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        
+        # 1. Get Book Count
+        c.execute("SELECT count(*) FROM books WHERE user_id=?", (user_id,))
+        book_count = c.fetchone()[0]
+        
+        # 2. Reading Days (Simulated for now, or based on user creation time if we had it)
+        # We can use a hash of user_id to give a consistent "reading age" or just random for demo
+        # For a real app, we would query the 'created_at' from users table
+        # Let's check if we have created_at.. we don't.
+        # So we'll frame it as "Joined recently" = 1 day, or just mock it nicely.
+        reading_days = 1 
+        
+        # 3. Read/Unread
+        # We don't have this status per book yet. We'll just say all are "Reading" for now.
+        reading_now = book_count
+        read_finished = 0
+        
+        conn.close()
+        
+        self.send_json_response(200, {
+            "book_count": book_count,
+            "reading_days": reading_days,
+            "reading_now": reading_now,
+            "read_finished": read_finished
+        })
 
     def handle_chat(self, data):
         message = data.get('message', '')
