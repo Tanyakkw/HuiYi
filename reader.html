@@ -619,33 +619,118 @@
             const tocList = document.getElementById('toc-list');
             const chapters = [];
 
-            // Common patterns: 第X章, 第X回, Chapter X
-            const patterns = [
-                /^(第[一二三四五六七八九十百千\d]+[章回节篇].*)/gm,
-                /^(Chapter\s+\d+.*)/gmi,
-                /^(\d+[\.、].+)/gm
+            // 1. Define patterns with priority
+            // High priority: Standard Chinese/English chapter headers
+            const highPriorityPatterns = [
+                // 第X章/回/节/卷/篇 + optional title
+                /(^\s*第[零一二三四五六七八九十百千\d]+[章回节卷篇].{0,30}$)/gm,
+                // Chapter X + optional title
+                /(^\s*Chapter\s+\d+.*$)/gmi,
+                // Prologue/Epilogue/etc
+                /(^\s*(引子|序|前言|后记|尾声|楔子|番外).{0,10}$)/gm
             ];
 
-            let found = false;
-            for (const pattern of patterns) {
-                const matches = content.match(pattern);
-                if (matches && matches.length > 0) {
-                    matches.slice(0, 50).forEach((title, i) => {
-                        chapters.push({ title: title.trim().substring(0, 30), index: i });
-                    });
-                    found = true;
+            // Medium priority: Numbered patterns (1. Title) - stricter to avoid list items
+            // Must be at start of line, number, dot/comma, then text, max length 30
+            const mediumPriorityPatterns = [
+                /(^\s*\d+[.、]\s*.{1,30}$)/gm
+            ];
+
+            // 2. Try to find matches
+            let matches = [];
+            let sourcePattern = "";
+
+            // Try high priority first
+            for (const pattern of highPriorityPatterns) {
+                const results = content.match(pattern);
+                if (results && results.length > 5) { // Threshold to consider valid structure
+                    matches = results;
+                    sourcePattern = "high";
                     break;
                 }
             }
 
-            if (found && chapters.length > 0) {
-                tocList.innerHTML = chapters.map(ch => `
-                    <button class="w-full text-left px-3 py-2 hover:bg-soft-gold/20 rounded-lg text-sm text-ink/80 truncate">
+            // If no high priority matches found, try medium
+            if (matches.length === 0) {
+                for (const pattern of mediumPriorityPatterns) {
+                    const results = content.match(pattern);
+                    // Medium patterns need more strict validation (e.g. at least 5 chapters)
+                    if (results && results.length > 5) {
+                        matches = results;
+                        sourcePattern = "medium";
+                        break;
+                    }
+                }
+            }
+
+            // Fallback: If still nothing, maybe just allow any matches from high priority even if few
+            if (matches.length === 0) {
+                for (const pattern of highPriorityPatterns) {
+                    const results = content.match(pattern);
+                    if (results && results.length > 0) {
+                        matches = results;
+                        break;
+                    }
+                }
+            }
+
+            // 3. Process matches
+            if (matches && matches.length > 0) {
+                // Find line indices for jumping
+                // Note: content.match returns strings, not indices. 
+                // To get indices we need duplicate scan or use matchAll.
+                // For simplicity in this text-based reader, we will just store the text 
+                // and search for it when clicked, or use approx location.
+
+                // Better approach: map raw content lines to find approximate page
+                // But since we split by paragraphs, exact mapping is hard.
+                // We'll just append them for now.
+
+                matches.forEach((title, i) => {
+                    // Clean up title
+                    chapters.push({
+                        title: title.trim(),
+                        index: i
+                    });
+                });
+            }
+
+            // 4. Render
+            if (chapters.length > 0) {
+                tocList.innerHTML = chapters.map((ch, i) => `
+                    <button onclick="jumpToChapter('${ch.title.replace(/'/g, "\\'")}')" 
+                        class="w-full text-left px-3 py-2 hover:bg-soft-gold/20 rounded-lg text-sm text-ink/80 truncate transition-colors duration-200">
                         ${ch.title}
                     </button>
                 `).join('');
             } else {
-                tocList.innerHTML = '<p class="text-huiyi-brown/50 text-sm">暂无章节信息</p>';
+                tocList.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-huiyi-brown/50 space-y-2">
+                        <span class="material-symbols-outlined text-3xl">menu_book</span>
+                        <p class="text-xs">未识别到目录</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Jump to chapter function
+        function jumpToChapter(title) {
+            // Find paragraph index that starts with this title
+            const index = window.allParagraphs.findIndex(p => p.includes(title) || p.trim() === title.trim());
+            if (index !== -1) {
+                // Calculate page
+                const page = Math.floor(index / window.paragraphsPerPage) + 1;
+                renderPage(page);
+                toggleTOC(); // Close sidebar
+            } else {
+                // Approximate search if exact match fails
+                const cleanTitle = title.trim();
+                const approxIndex = window.allParagraphs.findIndex(p => p.includes(cleanTitle.substring(0, 10)));
+                if (approxIndex !== -1) {
+                    const page = Math.floor(approxIndex / window.paragraphsPerPage) + 1;
+                    renderPage(page);
+                    toggleTOC();
+                }
             }
         }
 
