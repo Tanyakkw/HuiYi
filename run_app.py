@@ -193,7 +193,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 ("红楼梦", "曹雪芹", "cc325b26ff584180bf504bcf50a44514.txt"),
                 ("生育制度", "费孝通", "f653423cc7d24a929180bccaf790d219.txt"),
                 ("长安的荔枝", "马伯庸", "9180b8ab333f44cabd0c98dd5d9c76be.txt"),
-                ("额尔古纳河右岸", "迟子建", "e49b1e7318b4424caae1bf5eea151c03.txt"),
+                ("基层女性", "王慧玲", "jicengNvxing.txt"),
             ]
             for title, author, filepath in DEFAULT_BOOKS:
                 book_id = str(uuid.uuid4())
@@ -424,7 +424,13 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         current_book_content = data.get('book_context', '') # Context from frontend
         
         # Build context-aware prompt
-        system_prompt = "你叫“会意”，是用户的知心阅读书友。你的回复要温暖、有深度、富有同理心。"
+        system_prompt = """你叫"会意"，是用户的知心阅读书友。你聪明博学、温暖有深度、富有同理心。
+
+【核心原则】
+1. 如果用户问到他书架里有的书，请结合你对这本书的了解进行深度分析和讨论。
+2. 如果用户问到他书架里没有的书，请凭借你丰富的知识储备，详细介绍这本书的内容、作者背景、核心思想，并给出你的阅读感受和推荐理由。不要回避说"我不知道"，而是积极分享你所了解的信息。
+3. 你可以主动推荐相关书籍，帮助用户拓展阅读视野。
+4. 回复时兼顾深度和趣味性，像一个真正热爱阅读的好友在聊天。"""
         
         # 1. Add User's Library Context
         if user_id:
@@ -436,7 +442,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             
             if books:
                 book_list = ", ".join([f"《{b[0]}》({b[1]})" for b in books])
-                system_prompt += f"\n\n你的用户目前藏书有：{book_list}。请在回答中适时关联这些书的内容，分析用户的阅读口味。"
+                system_prompt += f"\n\n【用户书架】用户目前藏书有：{book_list}。如果用户聊到这些书，请深入讨论；如果聊到其他书，也请积极回应，不要局限于书架内容。"
 
         # 2. Add Current Book Context
         if current_book_content:
