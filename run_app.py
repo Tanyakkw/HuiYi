@@ -472,8 +472,8 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         if not GEMINI_API_KEY:
             return "AI服务未配置。请在Railway环境变量中设置 GEMINI_API_KEY。"
         
-        # Use gemini-2.5-flash - the latest stable version
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+        # Use gemini-2.0-flash - has much higher free tier limits (1500 RPD vs 20 RPD for 2.5)
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
         headers = {'Content-Type': 'application/json'}
         
         payload = {
