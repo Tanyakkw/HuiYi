@@ -188,10 +188,14 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             c.execute("INSERT INTO users (id, username, password, avatar, signature) VALUES (?, ?, ?, ?, ?)",
                       (user_id, username, pwd_hash, avatar, signature))
             
-            # --- Copy Default Books from 'template' user ---
-            c.execute("SELECT title, author, filepath FROM books WHERE user_id='template'")
-            default_books = c.fetchall()
-            for title, author, filepath in default_books:
+            # --- Add Default Books for new user ---
+            DEFAULT_BOOKS = [
+                ("红楼梦", "曹雪芹", "cc325b26ff584180bf504bcf50a44514.txt"),
+                ("生育制度", "费孝通", "f653423cc7d24a929180bccaf790d219.txt"),
+                ("长安的荔枝", "马伯庸", "9180b8ab333f44cabd0c98dd5d9c76be.txt"),
+                ("额尔古纳河右岸", "迟子建", "e49b1e7318b4424caae1bf5eea151c03.txt"),
+            ]
+            for title, author, filepath in DEFAULT_BOOKS:
                 book_id = str(uuid.uuid4())
                 c.execute("INSERT INTO books (id, user_id, title, author, filepath) VALUES (?, ?, ?, ?, ?)",
                           (book_id, user_id, title, author, filepath))
