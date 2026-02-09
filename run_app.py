@@ -11,9 +11,10 @@ import hashlib
 import uuid
 import base64
 import sys
+import os
 
 # --- Configuration ---
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))
 # Ensure we use the absolute path for the DB to avoid CWD issues
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "mybook.db")
@@ -497,7 +498,7 @@ class ThreadingTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 if __name__ == "__main__":
     print(f"Starting server on port {PORT}...")
-    with ThreadingTCPServer(("", PORT), MyHandler) as httpd:
+    with ThreadingTCPServer(("0.0.0.0", PORT), MyHandler) as httpd:
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
