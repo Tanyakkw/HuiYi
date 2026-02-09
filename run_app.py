@@ -472,36 +472,59 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         if not GEMINI_API_KEY:
             return "AI服务未配置。请在Railway环境变量中设置 GEMINI_API_KEY。"
         
-        # Use gemini-2.0-flash - has much higher free tier limits (1500 RPD vs 20 RPD for 2.5)
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
-        headers = {'Content-Type': 'application/json'}
+        # Try multiple models in order of preference
+        models_to_try = [
+            "gemini-flash-latest",  # Alias to current best flash model
+            "gemini-2.0-flash",
+            "gemma-3-27b-it",       # Gemma may have different limits
+        ]
         
+        headers = {'Content-Type': 'application/json'}
         payload = {
             "contents": [{
                 "parts": [{"text": system_instruction + "\n\n用户说: " + prompt}]
             }]
         }
-
-        try:
-            req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-            with urllib.request.urlopen(req, timeout=30) as response:
-                result = json.loads(response.read().decode('utf-8'))
-                try:
-                    return result['candidates'][0]['content']['parts'][0]['text']
-                except:
-                    return "我似乎走神了（API返回异常）"
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode('utf-8') if e.fp else ""
-            print(f"Gemini API Error: {e.code} - {error_body}")
-            if e.code == 403:
-                return "AI密钥无效或已过期。请在Railway中更新 GEMINI_API_KEY。"
-            elif e.code == 429:
-                return "请求太频繁，请稍后再试。"
-            else:
-                return f"AI服务异常 (错误码: {e.code})"
-        except Exception as e:
-            print(f"Gemini Connection Error: {str(e)}")
-            return f"连接中断: {str(e)}"
+        
+        import time
+        last_error = None
+        
+        for model in models_to_try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+            
+            try:
+                req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
+                with urllib.request.urlopen(req, timeout=30) as response:
+                    result = json.loads(response.read().decode('utf-8'))
+                    try:
+                        return result['candidates'][0]['content']['parts'][0]['text']
+                    except:
+                        return "我似乎走神了（API返回异常）"
+            except urllib.error.HTTPError as e:
+                last_error = e
+                if e.code == 429:
+                    # Rate limited, try next model
+                    time.sleep(1)
+                    continue
+                elif e.code == 404:
+                    # Model not found, try next
+                    continue
+                else:
+                    error_body = e.read().decode('utf-8') if e.fp else ""
+                    print(f"Gemini API Error: {e.code} - {error_body}")
+                    if e.code == 403:
+                        return "AI密钥无效或已过期。请在Railway中更新 GEMINI_API_KEY。"
+                    return f"AI服务异常 (错误码: {e.code})"
+            except Exception as e:
+                last_error = e
+                continue
+        
+        # All models failed
+        if last_error:
+            if isinstance(last_error, urllib.error.HTTPError) and last_error.code == 429:
+                return "所有AI模型均已达到配额上限。请稍后再试，或联系开发者升级API配额。"
+            return f"连接中断: {str(last_error)}"
+        return "AI服务暂时不可用"
 
     def send_json_response(self, status_code, data):
         self.send_response(status_code)
