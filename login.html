@@ -170,34 +170,34 @@
                         <label
                             class="block text-xs font-bold text-ink-soft tracking-widest uppercase mb-1 ml-2">头像</label>
                         <div class="flex justify-around p-2 bg-white/60 rounded-lg border border-ink-soft/20">
-                            <label class="cursor-pointer">
+                            <label class="cursor-pointer" onclick="selectAvatar(this)">
                                 <input type="radio" name="avatar" value="default_avatar_1.svg" class="hidden" checked>
                                 <img src="/static/avatars/default_avatar_1.svg"
-                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    class="w-12 h-12 rounded-full border-2 border-warm-red hover:border-warm-red transition-all avatar-img"
                                     alt="Avatar 1">
                             </label>
-                            <label class="cursor-pointer">
+                            <label class="cursor-pointer" onclick="selectAvatar(this)">
                                 <input type="radio" name="avatar" value="default_avatar_2.svg" class="hidden">
                                 <img src="/static/avatars/default_avatar_2.svg"
-                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all avatar-img"
                                     alt="Avatar 2">
                             </label>
-                            <label class="cursor-pointer">
+                            <label class="cursor-pointer" onclick="selectAvatar(this)">
                                 <input type="radio" name="avatar" value="default_avatar_3.svg" class="hidden">
                                 <img src="/static/avatars/default_avatar_3.svg"
-                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all avatar-img"
                                     alt="Avatar 3">
                             </label>
-                            <label class="cursor-pointer">
+                            <label class="cursor-pointer" onclick="selectAvatar(this)">
                                 <input type="radio" name="avatar" value="default_avatar_4.svg" class="hidden">
                                 <img src="/static/avatars/default_avatar_4.svg"
-                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all avatar-img"
                                     alt="Avatar 4">
                             </label>
-                            <label class="cursor-pointer">
+                            <label class="cursor-pointer" onclick="selectAvatar(this)">
                                 <input type="radio" name="avatar" value="default_avatar_5.svg" class="hidden">
                                 <img src="/static/avatars/default_avatar_5.svg"
-                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all peer-checked:border-warm-red"
+                                    class="w-12 h-12 rounded-full border-2 border-transparent hover:border-warm-red transition-all avatar-img"
                                     alt="Avatar 5">
                             </label>
                         </div>
@@ -219,6 +219,18 @@
     <script>
         let currentMode = 'login'; // 'login' or 'register'
 
+        // Avatar selection highlight
+        function selectAvatar(label) {
+            // Remove border from all avatars
+            document.querySelectorAll('.avatar-img').forEach(img => {
+                img.classList.remove('border-warm-red');
+                img.classList.add('border-transparent');
+            });
+            // Add border to selected avatar
+            const selectedImg = label.querySelector('.avatar-img');
+            selectedImg.classList.remove('border-transparent');
+            selectedImg.classList.add('border-warm-red');
+        }
         function openModal(mode) {
             currentMode = mode;
             const title = mode === 'login' ? '重逢' : '初见';

@@ -159,10 +159,17 @@
 
     <!-- 添加书籍按钮 (悬浮) -->
     <div class="fixed bottom-24 right-6 z-40">
-        <button onclick="document.getElementById('upload-input').click()"
-            class="bg-ink-dark text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all">
-            <span class="material-symbols-outlined">add</span>
-        </button>
+        <div class="relative group">
+            <button onclick="document.getElementById('upload-input').click()"
+                class="bg-ink-dark text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+            <!-- 格式提示 -->
+            <div
+                class="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-ink-dark/90 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                支持 TXT 格式
+            </div>
+        </div>
         <input type="file" id="upload-input" class="hidden" accept=".txt" onchange="handleUpload(this)">
     </div>
 

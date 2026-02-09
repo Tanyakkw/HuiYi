@@ -325,11 +325,23 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         full_path = os.path.join(BOOKS_DIR, filepath)
         
         try:
-            with open(full_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-            # Simple chunking could happen here, but sending full text for now (assuming < 2MB txt)
+            # Try multiple encodings for compatibility
+            content = None
+            for encoding in ['utf-8', 'gbk', 'gb2312', 'utf-16', 'latin-1']:
+                try:
+                    with open(full_path, 'r', encoding=encoding) as f:
+                        content = f.read()
+                    break
+                except UnicodeDecodeError:
+                    continue
+            
+            if content is None:
+                self.send_json_response(500, {"error": "Could not decode book file"})
+                return
+                
             self.send_json_response(200, {"title": title, "author": author, "content": content})
         except Exception as e:
+            print(f"Book read error: {e}")
             self.send_json_response(500, {"error": "Could not read book file"})
 
     def handle_get_current_book(self, query):
