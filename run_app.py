@@ -13,48 +13,15 @@ import base64
 import sys
 
 # --- Configuration ---
-PORT = int(os.environ.get("PORT", 8000))
+PORT = 8000
 # Ensure we use the absolute path for the DB to avoid CWD issues
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "mybook.db")
 BOOKS_DIR = os.path.join(BASE_DIR, "static", "books")
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")  # Set in Railway environment variables
+GEMINI_API_KEY = "AIzaSyABxytI-RrsGtVydOxhisaobG_gSQDYgcw"
 
 # Ensure directories exist
 os.makedirs(BOOKS_DIR, exist_ok=True)
-
-def sanitize_db_usernames():
-    """Fix existing usernames with invisible spaces"""
-    try:
-        conn = sqlite3.connect(DB_FILE)
-        c = conn.cursor()
-        
-        # Check if users table exists
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
-        if not c.fetchone():
-            conn.close()
-            return
-
-        c.execute("SELECT id, username FROM users")
-        users = c.fetchall()
-        
-        import re
-        for user_id, username in users:
-            clean_username = re.sub(r'\s+', '', username)
-            if clean_username != username:
-                print(f"Migrating username: {repr(username)} -> {clean_username}")
-                try:
-                    c.execute("UPDATE users SET username=? WHERE id=?", (clean_username, user_id))
-                except sqlite3.IntegrityError:
-                    pass
-        
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(f"DB Migration Error: {e}")
-
-# Run migration on startup
-sanitize_db_usernames()
 
 # --- Database Initialization ---
 def init_db():
@@ -196,8 +163,6 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
                 self.handle_upload(data)
             elif self.path == '/api/update_current_book':
                 self.handle_update_current_book(data)
-            elif self.path == '/api/user_profile':
-                self.handle_get_user_profile(data)
             else:
                 self.send_error(404, "API not found")
         except Exception as e:
@@ -206,12 +171,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
     # --- API Handlers ---
 
     def handle_register(self, data):
-        username = data.get('username', '').strip()
-        # Remove any internal zero-width spaces or special whitespace if needed, 
-        # but strip() covers most cases. Let's be safe:
-        import re
-        username = re.sub(r'\s+', '', username)
-        
+        username = data.get('username')
         password = data.get('password')
         signature = data.get('signature', '这个人很懒，什么都没写')
         avatar = data.get('avatar', 'default_avatar_1.svg')
@@ -228,14 +188,10 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             c.execute("INSERT INTO users (id, username, password, avatar, signature) VALUES (?, ?, ?, ?, ?)",
                       (user_id, username, pwd_hash, avatar, signature))
             
-            # --- Add Default Books for new user ---
-            DEFAULT_BOOKS = [
-                ("红楼梦", "曹雪芹", "cc325b26ff584180bf504bcf50a44514.txt"),
-                ("生育制度", "费孝通", "f653423cc7d24a929180bccaf790d219.txt"),
-                ("长安的荔枝", "马伯庸", "9180b8ab333f44cabd0c98dd5d9c76be.txt"),
-                ("基层女性", "王慧玲", "jicengNvxing.txt"),
-            ]
-            for title, author, filepath in DEFAULT_BOOKS:
+            # --- Copy Default Books from 'template' user ---
+            c.execute("SELECT title, author, filepath FROM books WHERE user_id='template'")
+            default_books = c.fetchall()
+            for title, author, filepath in default_books:
                 book_id = str(uuid.uuid4())
                 c.execute("INSERT INTO books (id, user_id, title, author, filepath) VALUES (?, ?, ?, ?, ?)",
                           (book_id, user_id, title, author, filepath))
@@ -249,11 +205,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             conn.close()
 
     def handle_login(self, data):
-        username = data.get('username', '').strip()
-        # Sanitize username same way
-        import re
-        username = re.sub(r'\s+', '', username)
-        
+        username = data.get('username')
         password = data.get('password')
         
         conn = sqlite3.connect(DB_FILE)
@@ -369,23 +321,11 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         full_path = os.path.join(BOOKS_DIR, filepath)
         
         try:
-            # Try multiple encodings for compatibility
-            content = None
-            for encoding in ['utf-8', 'gbk', 'gb2312', 'utf-16', 'latin-1']:
-                try:
-                    with open(full_path, 'r', encoding=encoding) as f:
-                        content = f.read()
-                    break
-                except UnicodeDecodeError:
-                    continue
-            
-            if content is None:
-                self.send_json_response(500, {"error": "Could not decode book file"})
-                return
-                
+            with open(full_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            # Simple chunking could happen here, but sending full text for now (assuming < 2MB txt)
             self.send_json_response(200, {"title": title, "author": author, "content": content})
         except Exception as e:
-            print(f"Book read error: {e}")
             self.send_json_response(500, {"error": "Could not read book file"})
 
     def handle_get_current_book(self, query):
@@ -474,53 +414,13 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             self.send_json_response(404, {"error": "User not found"})
         conn.close()
 
-    def handle_get_user_profile(self, data):
-        user_id = data.get('user_id')
-        if not user_id:
-            self.send_json_response(400, {"error": "Missing user_id"})
-            return
-
-        conn = sqlite3.connect(DB_FILE)
-        c = conn.cursor()
-        
-        # 1. Get Book Count
-        c.execute("SELECT count(*) FROM books WHERE user_id=?", (user_id,))
-        book_count = c.fetchone()[0]
-        
-        # 2. Reading Days (Simulated for now, or based on user creation time if we had it)
-        # We can use a hash of user_id to give a consistent "reading age" or just random for demo
-        # For a real app, we would query the 'created_at' from users table
-        # Let's check if we have created_at.. we don't.
-        # So we'll frame it as "Joined recently" = 1 day, or just mock it nicely.
-        reading_days = 1 
-        
-        # 3. Read/Unread
-        # We don't have this status per book yet. We'll just say all are "Reading" for now.
-        reading_now = book_count
-        read_finished = 0
-        
-        conn.close()
-        
-        self.send_json_response(200, {
-            "book_count": book_count,
-            "reading_days": reading_days,
-            "reading_now": reading_now,
-            "read_finished": read_finished
-        })
-
     def handle_chat(self, data):
         message = data.get('message', '')
         user_id = data.get('user_id') 
         current_book_content = data.get('book_context', '') # Context from frontend
         
         # Build context-aware prompt
-        system_prompt = """你叫"会意"，是用户的知心阅读书友。你聪明博学、温暖有深度、富有同理心。
-
-【核心原则】
-1. 如果用户问到他书架里有的书，请结合你对这本书的了解进行深度分析和讨论。
-2. 如果用户问到他书架里没有的书，请凭借你丰富的知识储备，详细介绍这本书的内容、作者背景、核心思想，并给出你的阅读感受和推荐理由。不要回避说"我不知道"，而是积极分享你所了解的信息。
-3. 你可以主动推荐相关书籍，帮助用户拓展阅读视野。
-4. 回复时兼顾深度和趣味性，像一个真正热爱阅读的好友在聊天。"""
+        system_prompt = "你叫“会意”，是用户的知心阅读书友。你的回复要温暖、有深度、富有同理心。"
         
         # 1. Add User's Library Context
         if user_id:
@@ -532,7 +432,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             
             if books:
                 book_list = ", ".join([f"《{b[0]}》({b[1]})" for b in books])
-                system_prompt += f"\n\n【用户书架】用户目前藏书有：{book_list}。如果用户聊到这些书，请深入讨论；如果聊到其他书，也请积极回应，不要局限于书架内容。"
+                system_prompt += f"\n\n你的用户目前藏书有：{book_list}。请在回答中适时关联这些书的内容，分析用户的阅读口味。"
 
         # 2. Add Current Book Context
         if current_book_content:
@@ -546,63 +446,25 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         self.send_json_response(200, {"response": ai_response})
 
     def call_gemini(self, prompt, system_instruction):
-        # Check if API key is configured
-        if not GEMINI_API_KEY:
-            return "AI服务未配置。请在Railway环境变量中设置 GEMINI_API_KEY。"
-        
-        # Try multiple models in order of preference
-        models_to_try = [
-            "gemini-flash-latest",  # Alias to current best flash model
-            "gemini-2.0-flash",
-            "gemma-3-27b-it",       # Gemma may have different limits
-        ]
-        
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
         headers = {'Content-Type': 'application/json'}
+        
         payload = {
             "contents": [{
                 "parts": [{"text": system_instruction + "\n\n用户说: " + prompt}]
             }]
         }
-        
-        import time
-        last_error = None
-        
-        for model in models_to_try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
-            
-            try:
-                req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-                with urllib.request.urlopen(req, timeout=30) as response:
-                    result = json.loads(response.read().decode('utf-8'))
-                    try:
-                        return result['candidates'][0]['content']['parts'][0]['text']
-                    except:
-                        return "我似乎走神了（API返回异常）"
-            except urllib.error.HTTPError as e:
-                last_error = e
-                if e.code == 429:
-                    # Rate limited, try next model
-                    time.sleep(1)
-                    continue
-                elif e.code == 404:
-                    # Model not found, try next
-                    continue
-                else:
-                    error_body = e.read().decode('utf-8') if e.fp else ""
-                    print(f"Gemini API Error: {e.code} - {error_body}")
-                    if e.code == 403:
-                        return "AI密钥无效或已过期。请在Railway中更新 GEMINI_API_KEY。"
-                    return f"AI服务异常 (错误码: {e.code})"
-            except Exception as e:
-                last_error = e
-                continue
-        
-        # All models failed
-        if last_error:
-            if isinstance(last_error, urllib.error.HTTPError) and last_error.code == 429:
-                return "所有AI模型均已达到配额上限。请稍后再试，或联系开发者升级API配额。"
-            return f"连接中断: {str(last_error)}"
-        return "AI服务暂时不可用"
+
+        try:
+            req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
+            with urllib.request.urlopen(req, timeout=20) as response:
+                result = json.loads(response.read().decode('utf-8'))
+                try:
+                    return result['candidates'][0]['content']['parts'][0]['text']
+                except:
+                    return "我似乎走神了（API返回异常）"
+        except Exception as e:
+            return f"连接中断: {str(e)}"
 
     def send_json_response(self, status_code, data):
         self.send_response(status_code)
@@ -635,8 +497,7 @@ class ThreadingTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 if __name__ == "__main__":
     print(f"Starting server on port {PORT}...")
-    # Bind to 0.0.0.0 for external access (required for Railway/cloud deployment)
-    with ThreadingTCPServer(("0.0.0.0", PORT), MyHandler) as httpd:
+    with ThreadingTCPServer(("", PORT), MyHandler) as httpd:
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
