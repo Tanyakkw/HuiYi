@@ -23,6 +23,39 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")  # Set in Railway environm
 # Ensure directories exist
 os.makedirs(BOOKS_DIR, exist_ok=True)
 
+def sanitize_db_usernames():
+    """Fix existing usernames with invisible spaces"""
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        
+        # Check if users table exists
+        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
+        if not c.fetchone():
+            conn.close()
+            return
+
+        c.execute("SELECT id, username FROM users")
+        users = c.fetchall()
+        
+        import re
+        for user_id, username in users:
+            clean_username = re.sub(r'\s+', '', username)
+            if clean_username != username:
+                print(f"Migrating username: {repr(username)} -> {clean_username}")
+                try:
+                    c.execute("UPDATE users SET username=? WHERE id=?", (clean_username, user_id))
+                except sqlite3.IntegrityError:
+                    pass
+        
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"DB Migration Error: {e}")
+
+# Run migration on startup
+sanitize_db_usernames()
+
 # --- Database Initialization ---
 def init_db():
     conn = sqlite3.connect(DB_FILE)
@@ -171,7 +204,12 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
     # --- API Handlers ---
 
     def handle_register(self, data):
-        username = data.get('username')
+        username = data.get('username', '').strip()
+        # Remove any internal zero-width spaces or special whitespace if needed, 
+        # but strip() covers most cases. Let's be safe:
+        import re
+        username = re.sub(r'\s+', '', username)
+        
         password = data.get('password')
         signature = data.get('signature', '这个人很懒，什么都没写')
         avatar = data.get('avatar', 'default_avatar_1.svg')
@@ -209,7 +247,11 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             conn.close()
 
     def handle_login(self, data):
-        username = data.get('username')
+        username = data.get('username', '').strip()
+        # Sanitize username same way
+        import re
+        username = re.sub(r'\s+', '', username)
+        
         password = data.get('password')
         
         conn = sqlite3.connect(DB_FILE)
