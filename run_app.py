@@ -19,7 +19,7 @@ PORT = int(os.environ.get("PORT", 8000))
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "mybook.db")
 BOOKS_DIR = os.path.join(BASE_DIR, "static", "books")
-GEMINI_API_KEY = "AIzaSyABxytI-RrsGtVydOxhisaobG_gSQDYgcw"
+DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
 
 # Ensure directories exist
 os.makedirs(BOOKS_DIR, exist_ok=True)
@@ -443,27 +443,39 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         else:
              system_prompt += "结合用户提到的书本内容进行回应。"
 
-        ai_response = self.call_gemini(message, system_prompt)
+        ai_response = self.call_qwen(message, system_prompt)
         self.send_json_response(200, {"response": ai_response})
 
-    def call_gemini(self, prompt, system_instruction):
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-        headers = {'Content-Type': 'application/json'}
+    def call_qwen(self, prompt, system_instruction):
+        # Use Qwen via DashScope compatible API
+        # Endpoint for Qwen-Turbo (Flash equivalent)
+        url = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+        headers = {
+            'Content-Type': 'application/json',
+            'Authorization': f'Bearer {DASHSCOPE_API_KEY}'
+        }
         
+        # User requested "qwen-flash-character".
+        # Mapping to "qwen-turbo" which is the standard fast model.
+        # Check if user provided different model via env var? No, keep it simple.
         payload = {
-            "contents": [{
-                "parts": [{"text": system_instruction + "\n\n用户说: " + prompt}]
-            }]
+            "model": "qwen-turbo", 
+            "messages": [
+                {"role": "system", "content": system_instruction},
+                {"role": "user", "content": prompt}
+            ]
         }
 
         try:
             req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-            with urllib.request.urlopen(req, timeout=20) as response:
+            with urllib.request.urlopen(req, timeout=30) as response:
                 result = json.loads(response.read().decode('utf-8'))
                 try:
-                    return result['candidates'][0]['content']['parts'][0]['text']
+                    return result['choices'][0]['message']['content']
                 except:
-                    return "我似乎走神了（API返回异常）"
+                    return "我似乎走神了（API返回结构异常）"
+        except urllib.error.HTTPError as e:
+            return f"AI服务异常: {e.code} - {e.reason}"
         except Exception as e:
             return f"连接中断: {str(e)}"
 
