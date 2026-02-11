@@ -97,7 +97,7 @@ def init_db():
             # Using filename as unique key is safest
             c.execute("SELECT count(*) FROM books WHERE user_id=? AND filepath=?", (user_id, filename))
             if c.fetchone()[0] == 0:
-                print(f"Adding default book '{title}' to user {user_id}")
+                # print(f"Adding default book '{title}' to user {user_id}") - Commented out to prevent UnicodeEncodeError in logs
                 book_id = str(uuid.uuid4())
                 c.execute("INSERT INTO books (id, user_id, title, author, filepath) VALUES (?, ?, ?, ?, ?)",
                           (book_id, user_id, title, author, filename))
