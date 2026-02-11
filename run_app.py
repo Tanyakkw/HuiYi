@@ -192,8 +192,8 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
     # --- API Handlers ---
 
     def handle_register(self, data):
-        username = data.get('username')
-        password = data.get('password')
+        username = data.get('username', '').strip()
+        password = data.get('password', '').strip()
         signature = data.get('signature', '这个人很懒，什么都没写')
         avatar = data.get('avatar', 'default_avatar_1.svg')
         
@@ -220,12 +220,15 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             self.send_json_response(200, {"message": "Success", "user_id": user_id})
         except sqlite3.IntegrityError:
             self.send_json_response(400, {"error": "Username taken"})
+        except Exception as e:
+            print(f"Register Error: {e}")
+            self.send_json_response(500, str(e))
         finally:
             conn.close()
 
     def handle_login(self, data):
-        username = data.get('username')
-        password = data.get('password')
+        username = data.get('username', '').strip()
+        password = data.get('password', '').strip()
         
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
