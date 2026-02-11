@@ -182,11 +182,62 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/20 backdrop-blur-sm" onclick="toggleSettings()"></div>
+        <div
+            class="absolute top-16 right-4 w-48 bg-white rounded-xl shadow-xl border border-border-soft p-2 animate-fade-in origin-top-right">
+            <div class="text-xs font-bold text-warm-accent px-3 py-2 uppercase tracking-wider">字体大小</div>
+            <div class="flex flex-col gap-1">
+                <button onclick="setFontSize('text-sm')"
+                    class="text-left px-3 py-2 text-sm text-primary hover:bg-xuan-paper rounded-lg transition-colors flex justify-between items-center group">
+                    小
+                    <span
+                        class="material-symbols-outlined text-base opacity-0 group-hover:opacity-100 text-warm-accent">check</span>
+                </button>
+                <button onclick="setFontSize('text-base')"
+                    class="text-left px-3 py-2 text-base text-primary hover:bg-xuan-paper rounded-lg transition-colors flex justify-between items-center group">
+                    中
+                    <span
+                        class="material-symbols-outlined text-base opacity-0 group-hover:opacity-100 text-warm-accent">check</span>
+                </button>
+                <button onclick="setFontSize('text-lg')"
+                    class="text-left px-3 py-2 text-lg text-primary hover:bg-xuan-paper rounded-lg transition-colors flex justify-between items-center group">
+                    大
+                    <span
+                        class="material-symbols-outlined text-base opacity-0 group-hover:opacity-100 text-warm-accent">check</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const chatContainer = document.getElementById('chat-container');
         const messageInput = document.getElementById('message-input');
         const sendBtn = document.getElementById('send-btn');
         let isProcessing = false;
+
+        // Font Size State
+        let currentFontSize = localStorage.getItem('chat_font_size') || 'text-[15px]'; // Default custom size
+
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function setFontSize(sizeClass) {
+            currentFontSize = sizeClass;
+            localStorage.setItem('chat_font_size', sizeClass);
+
+            // Apply to existing bubbles
+            document.querySelectorAll('.bubble-text').forEach(el => {
+                // Remove old size classes and add new one
+                el.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl', 'text-[15px]');
+                el.classList.add(sizeClass);
+            });
+
+            toggleSettings();
+        }
 
         // Context Management
         let currentBookContext = "";
@@ -194,6 +245,10 @@
         const bookId = urlParams.get('book_id');
 
         async function initChatContext() {
+            // Apply saved font size
+            const savedSize = localStorage.getItem('chat_font_size');
+            if (savedSize) setFontSize(savedSize);
+
             // Hide intro card initially until data loaded
             const introCard = document.getElementById('chat-intro-card');
 
@@ -264,16 +319,21 @@
             const container = document.getElementById('ai-greeting-text');
             if (!container) return;
 
-            // Left-aligned Bubble Style (Darker Beige)
+            // Updated to match appendMessage alignment (px-6 equivalent via margin/padding)
+            // Was: max-w-[90%] mx-auto text-center. 
+            // Fix: remove centered constraints, make it look like a message.
+
             container.innerHTML = `
                 <div class="flex flex-col items-start text-left animate-slide-up">
                     <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1 ml-1">会意</p>
-                    <div class="bg-ai-bubble border border-warm-accent/10 px-5 py-4 rounded-2xl rounded-tl-sm shadow-sm text-[15px] leading-relaxed text-primary text-left">
+                    <div class="bg-ai-bubble border border-warm-accent/10 px-5 py-4 rounded-2xl rounded-tl-sm shadow-sm leading-relaxed text-primary text-left bubble-text ${currentFontSize}">
                         ${text}
                     </div>
                 </div>
             `;
-            container.className = "mt-8 max-w-[90%] mx-auto";
+            // Remove 'text-center' and 'mx-auto' from parent via direct className override
+            // Match padding of regular messages (px-6)
+            container.className = "mt-8 px-6";
         }
 
         async function sendMessage() {
@@ -328,30 +388,30 @@
 
             let html = '';
             if (isUser) {
-                // User Bubble: Flesh Pink (user-bubble), Text Dark
+                // User Bubble
                 html = `
-            <div class="flex items-start gap-3 px-6 justify-end message-item">
+            <div class="flex items-start gap-3 px-6 justify-end message-item animate-fade-in">
                 <div class="flex flex-col gap-1 items-end max-w-[85%]">
                     <p class="text-warm-accent text-[11px] font-medium mr-1 mb-1">我</p>
-                    <div class="bg-user-bubble text-primary rounded-2xl rounded-tr-sm px-5 py-3 shadow-sm text-[15px] leading-relaxed break-words border border-warm-accent/5">
+                    <div class="bg-user-bubble text-primary rounded-2xl rounded-tr-sm px-5 py-3 shadow-sm leading-relaxed break-words border border-warm-accent/5 bubble-text ${currentFontSize}">
                         ${formattedText}
                     </div>
                 </div>
             </div>`;
             } else if (isSystem) {
                 html = `
-            <div class="flex justify-center px-6 message-item">
+            <div class="flex justify-center px-6 message-item animate-fade-in">
                 <div class="bg-warm-accent/10 text-warm-accent rounded-full px-4 py-1 text-xs font-medium">
                     ${text}
                 </div>
             </div>`;
             } else {
-                // AI Response: Unified Bubble Style (bg-ai-bubble)
+                // AI Response
                 html = `
-            <div class="flex items-start gap-4 px-6 message-item">
+            <div class="flex items-start gap-4 px-6 message-item animate-fade-in">
                 <div class="flex flex-col items-start gap-1 max-w-[90%]">
                     <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1 ml-1">会意</p>
-                    <div class="bg-ai-bubble border border-warm-accent/10 px-5 py-4 rounded-2xl rounded-tl-sm shadow-sm text-[15px] leading-relaxed text-primary">
+                    <div class="bg-ai-bubble border border-warm-accent/10 px-5 py-4 rounded-2xl rounded-tl-sm shadow-sm leading-relaxed text-primary bubble-text ${currentFontSize}">
                         ${formattedText}
                     </div>
                 </div>
@@ -368,7 +428,7 @@
         function appendLoading() {
             const id = 'loading-' + Date.now();
             const html = `
-            <div id="${id}" class="flex items-start gap-4 px-6 message-item">
+            <div id="${id}" class="flex items-start gap-4 px-6 message-item animate-fade-in">
                  <div class="flex flex-col items-start gap-1 max-w-[90%]">
                     <p class="text-warm-accent text-[11px] font-bold tracking-widest uppercase mb-1 ml-1">会意</p>
                     <div class="bg-ai-bubble/50 rounded-2xl rounded-tl-sm px-4 py-2 flex gap-1 items-center">
