@@ -331,9 +331,9 @@
                     </div>
                 </div>
             `;
-            // Remove 'text-center' and 'mx-auto' from parent via direct className override
-            // Match padding of regular messages (px-6)
-            container.className = "mt-8 px-6";
+            // Application of negative margin (-mx-4) to counteract parent's padding (px-4), 
+            // then applying standard padding (px-6) to match other chat bubbles perfectly.
+            container.className = "mt-8 -mx-4 px-6";
         }
 
         async function sendMessage() {
