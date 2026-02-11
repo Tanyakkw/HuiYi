@@ -4,3 +4,4 @@
 # - sqlite3 (built-in)
 # - json (built-in)
 # - urllib (built-in)
+requests
