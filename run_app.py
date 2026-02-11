@@ -18,6 +18,7 @@ PORT = int(os.environ.get("PORT", 8000))
 # Ensure we use the absolute path for the DB to avoid CWD issues
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "mybook.db")
+BOOKS_DIR = os.path.join(BASE_DIR, "static", "books")
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
 
 # --- Default Books Configuration ---
