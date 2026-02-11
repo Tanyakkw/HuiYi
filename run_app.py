@@ -18,8 +18,26 @@ PORT = int(os.environ.get("PORT", 8000))
 # Ensure we use the absolute path for the DB to avoid CWD issues
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_FILE = os.path.join(BASE_DIR, "mybook.db")
-BOOKS_DIR = os.path.join(BASE_DIR, "static", "books")
 DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")
+
+# --- Default Books Configuration ---
+# These books will be added to ALL users (new and existing)
+DEFAULT_BOOKS = [
+    ("红楼梦", "曹雪芹", "cc325b26ff584180bf504bcf50a44514.txt"),
+    ("生育制度", "费孝通", "f653423cc7d24a929180bccaf790d219.txt"),
+    ("长安的荔枝", "马伯庸", "9180b8ab333f44cabd0c98dd5d9c76be.txt"),
+    ("基层女性", "王慧玲", "jicengNvxing.txt"),
+]
+
+# --- AI System Prompt Configuration ---
+# You can edit this prompt directly here.
+SYSTEM_PROMPT = """你叫“会意”，是用户的知心阅读书友。你的回复要温暖、有深度、富有同理心。
+
+【核心原则】
+1. 如果用户问到他书架里有的书，请结合你对这本书的了解进行深度分析和讨论。
+2. 如果用户问到他书架里没有的书，请凭借你丰富的知识储备，详细介绍这本书的内容、作者背景、核心思想，并给出你的阅读感受和推荐理由。不要回避说"我不知道"，而是积极分享你所了解的信息。
+3. 你可以主动推荐相关书籍，帮助用户拓展阅读视野。
+4. 回复时兼顾深度和趣味性，像一个真正热爱阅读的好友在聊天。"""
 
 # Ensure directories exist
 os.makedirs(BOOKS_DIR, exist_ok=True)
@@ -34,13 +52,13 @@ def init_db():
                  (id TEXT PRIMARY KEY, username TEXT UNIQUE, password TEXT, 
                   avatar TEXT, signature TEXT, current_book_id TEXT)''')
     
-    # Migration: Add current_book_id if missing (for existing DBs)
+    # Migration: Add current_book_id if missing
     try:
         c.execute("ALTER TABLE users ADD COLUMN current_book_id TEXT")
     except sqlite3.OperationalError:
-        pass  # Column already exists
+        pass 
     
-    # 2. Books Table (New)
+    # 2. Books Table 
     c.execute('''CREATE TABLE IF NOT EXISTS books
                  (id TEXT PRIMARY KEY, user_id TEXT, title TEXT, author TEXT, 
                   filepath TEXT, progress INTEGER DEFAULT 0, 
@@ -64,24 +82,21 @@ def init_db():
             except sqlite3.IntegrityError:
                 pass
     
-    # Check if we need to seed default red chamber book
-    c.execute("SELECT count(*) FROM books")
-    if c.fetchone()[0] == 0:
-        print("Seeding default book...")
-        # Create a dummy file for "Dream of the Red Chamber"
-        default_book_path = os.path.join(BOOKS_DIR, "hongloumeng_excerpt.txt")
-        if not os.path.exists(default_book_path):
-            with open(default_book_path, "w", encoding="utf-8") as f:
-                f.write("《红楼梦》\n作者：曹雪芹\n\n第一回 甄士隐梦幻识通灵 贾雨村风尘怀闺秀\n\n此开卷第一回也。作者自云：因曾历过一番梦幻之后，故将真事隐去，而借“通灵”之说，撰此《石头记》一书也。故曰“甄士隐”云云。但书中所记何事何人？自又云：“今风尘碌碌，一事无成，忽念及当日所有之女子，一一细考较去，觉其行止见识，皆出于我之上。何我堂堂须眉，诚不若彼裙钗哉？实愧则有余，悔又无益之大无可如何之日也！当此日，欲将已往所赖天恩祖德，锦衣纨绔之时，饫甘餍肥之日，背父兄教育之恩，负师友规谈之德，以至今日一技无成，半生潦倒之罪，编述一集，以告天下人：我之罪固不免，然闺阁中本自历历有人，万不可因我之不肖，自护己短，一并使其泯灭也。虽今日之茅椽蓬牖，瓦灶绳床，其晨夕风露，阶柳庭花，亦未有妨于我之襟怀笔墨者。虽我未学，下笔无文，又何妨用假语村言，敷演出一段故事来，以悦同好之人，为此痛苦之言，为作者本意也。故曰“贾雨村”云云。")
-        
-        # Assign to test users
-        # We'll assign it to whoever is the first user (usually test_user_1)
-        c.execute("SELECT id FROM users LIMIT 1")
-        user = c.fetchone()
-        if user:
-            book_id = str(uuid.uuid4())
-            c.execute("INSERT INTO books (id, user_id, title, author, filepath) VALUES (?, ?, ?, ?, ?)",
-                      (book_id, user[0], "红楼梦 (节选)", "曹雪芹", "hongloumeng_excerpt.txt"))
+    # --- Ensure Default Books for ALL Users (Migration) ---
+    c.execute("SELECT id FROM users")
+    all_users = c.fetchall()
+    
+    for (user_id,) in all_users:
+        # For each default book, check if user has it
+        for title, author, filename in DEFAULT_BOOKS:
+            # Check by title/author/filepath intersection to avoid duplicates
+            # Using filename as unique key is safest
+            c.execute("SELECT count(*) FROM books WHERE user_id=? AND filepath=?", (user_id, filename))
+            if c.fetchone()[0] == 0:
+                print(f"Adding default book '{title}' to user {user_id}")
+                book_id = str(uuid.uuid4())
+                c.execute("INSERT INTO books (id, user_id, title, author, filepath) VALUES (?, ?, ?, ?, ?)",
+                          (book_id, user_id, title, author, filename))
 
     conn.commit()
     conn.close()
@@ -189,13 +204,11 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             c.execute("INSERT INTO users (id, username, password, avatar, signature) VALUES (?, ?, ?, ?, ?)",
                       (user_id, username, pwd_hash, avatar, signature))
             
-            # --- Copy Default Books from 'template' user ---
-            c.execute("SELECT title, author, filepath FROM books WHERE user_id='template'")
-            default_books = c.fetchall()
-            for title, author, filepath in default_books:
+            # --- Copy Default Books ---
+            for title, author, filename in DEFAULT_BOOKS:
                 book_id = str(uuid.uuid4())
                 c.execute("INSERT INTO books (id, user_id, title, author, filepath) VALUES (?, ?, ?, ?, ?)",
-                          (book_id, user_id, title, author, filepath))
+                          (book_id, user_id, title, author, filename))
             # -----------------------------------------------
 
             conn.commit()
@@ -420,8 +433,9 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         user_id = data.get('user_id') 
         current_book_content = data.get('book_context', '') # Context from frontend
         
-        # Build context-aware prompt
-        system_prompt = "你叫“会意”，是用户的知心阅读书友。你的回复要温暖、有深度、富有同理心。"
+        # Build context-aware prompt using the global configuration
+        # Make a copy to avoid appending to the global constant forever
+        system_prompt = SYSTEM_PROMPT
         
         # 1. Add User's Library Context
         if user_id:
