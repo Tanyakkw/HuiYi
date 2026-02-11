@@ -267,8 +267,8 @@
                         if (titleEl) titleEl.innerText = `《${data.title}》`;
                         if (subtitleEl) subtitleEl.innerText = data.author || '';
 
-                        // Update Greeting
-                        const greeting = `你好！我是你的阅读伙伴。关于${data.author ? data.author + '的' : ''}《${data.title}》，你想从哪个角度开始探讨？我们聊聊书中的人物，或者它反映的社会现象？`;
+                        // Update Greeting - Warmer Tone
+                        const greeting = `嘿，老朋友！很高兴又能和你一起读书。关于${data.author ? data.author + '的' : ''}这本《${data.title}》，你想先聊聊哪部分？书里的人，还是书里的事？`;
                         renderGreetingBubble(greeting);
                     }
                 } catch (e) {
@@ -299,12 +299,12 @@
                                 if (titleEl) titleEl.innerText = `《${currentData.title}》`;
                                 if (subtitleEl) subtitleEl.innerText = currentData.author || '深度解读中';
 
-                                // Update Greeting
-                                const greeting = `你好！我是你的阅读伙伴。关于${currentData.author ? currentData.author + '的' : ''}《${currentData.title}》，你想从哪个角度开始探讨？我们聊聊书中的人物，或者它反映的社会现象？`;
+                                // Update Greeting - Warmer Tone
+                                const greeting = `嘿，老朋友！很高兴又能和你一起读书。关于${currentData.author ? currentData.author + '的' : ''}这本《${currentData.title}》，你想先聊聊哪部分？书里的人，还是书里的事？`;
                                 renderGreetingBubble(greeting);
                             } else {
                                 if (titleEl) titleEl.innerText = "暂无书籍";
-                                renderGreetingBubble('👋 嗨！我是会意。您的书架还空着，去上传几本好书吧。');
+                                renderGreetingBubble('👋 嗨，朋友！我是会意。书架现在还是空的，去挑几本喜欢的书放上来吧，我在这里等你。');
                             }
                         }
                     }
