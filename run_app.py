@@ -455,11 +455,9 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
             'Authorization': f'Bearer {DASHSCOPE_API_KEY}'
         }
         
-        # User requested "qwen-flash-character".
-        # Mapping to "qwen-turbo" which is the standard fast model.
-        # Check if user provided different model via env var? No, keep it simple.
+        # User requested "qwen-flash-character" explicitly for free tier.
         payload = {
-            "model": "qwen-turbo", 
+            "model": "qwen-flash-character", 
             "messages": [
                 {"role": "system", "content": system_instruction},
                 {"role": "user", "content": prompt}
